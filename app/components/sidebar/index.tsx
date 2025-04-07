@@ -6,6 +6,7 @@ import {
   PencilSquareIcon,
 } from '@heroicons/react/24/outline'
 import { ChatBubbleOvalLeftEllipsisIcon as ChatBubbleOvalLeftEllipsisSolidIcon } from '@heroicons/react/24/solid'
+import { Trash } from 'lucide-react'
 import Button from '@/app/components/base/button'
 // import Card from './card'
 import type { ConversationItem } from '@/types/app'
@@ -57,19 +58,31 @@ const Sidebar: FC<ISidebarProps> = ({
                 isCurrent
                   ? 'bg-primary-50 text-primary-600'
                   : 'text-gray-700 hover:bg-gray-100 hover:text-gray-700',
-                'group flex items-center rounded-md px-2 py-2 text-sm font-medium cursor-pointer',
+                'group flex items-center justify-between rounded-md px-2 py-2 text-sm font-medium cursor-pointer',
               )}
             >
-              <ItemIcon
-                className={classNames(
-                  isCurrent
-                    ? 'text-primary-600'
-                    : 'text-gray-400 group-hover:text-gray-500',
-                  'mr-3 h-5 w-5 flex-shrink-0',
-                )}
-                aria-hidden="true"
-              />
-              {item.name}
+              <div className="flex items-center">
+                <ItemIcon
+                  className={classNames(
+                    isCurrent
+                      ? 'text-primary-600'
+                      : 'text-gray-400 group-hover:text-gray-500',
+                    'mr-3 h-5 w-5 flex-shrink-0',
+                  )}
+                  aria-hidden="true"
+                />
+                {item.name}
+              </div>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation() // Prevent triggering the parent onClick
+                  // Your delete function here, e.g.: onDeleteItem(item.id)
+                }}
+                className="text-gray-400 hover:text-red-500 h-5 w-5 flex-shrink-0"
+              >
+                <Trash className="h-5 w-5" aria-hidden="true" />
+              </button>
             </div>
           )
         })}

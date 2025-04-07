@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { FolderOpen } from 'lucide-react'
 import Loading02 from '@/app/components/base/icons/line/loading-02'
 import XClose from '@/app/components/base/icons/line/x-close'
 import RefreshCcw01 from '@/app/components/base/icons/line/refresh-ccw-01'
@@ -38,7 +39,7 @@ const ImageList: FC<ImageListProps> = ({
     if (item.type === TransferMethod.remote_url && onImageLinkLoadError)
       onImageLinkLoadError(item._id)
   }
-
+  console.log(list[0])
   return (
     <div className='flex flex-wrap'>
       {
@@ -89,14 +90,31 @@ const ImageList: FC<ImageListProps> = ({
                 </div>
               )
             }
-            <img
-              className='w-16 h-16 rounded-lg object-cover cursor-pointer border-[0.5px] border-black/5'
-              alt=''
-              onLoad={() => handleImageLinkLoadSuccess(item)}
-              onError={() => handleImageLinkLoadError(item)}
-              src={item.type === TransferMethod.remote_url ? item.url : item.base64Url}
-              onClick={() => item.progress === 100 && setImagePreviewUrl((item.type === TransferMethod.remote_url ? item.url : item.base64Url) as string)}
-            />
+            {item?.file?.type.includes('image')
+              ? (<img className='w-16 h-16 rounded-lg object-cover cursor-pointer border-[0.5px] border-black/5' alt=''
+                onLoad={() => handleImageLinkLoadSuccess(item)}
+                onError={() => handleImageLinkLoadError(item)}
+                src={item.type === TransferMethod.remote_url ? item.url : item.base64Url}
+                onClick={() =>
+                  item.progress === 100
+                  && setImagePreviewUrl(
+                    (item.type === TransferMethod.remote_url ? item.url : item.base64Url) as string,
+                  )
+                }
+              />
+              )
+              : (
+                <div className='w-16 h-16 flex flex-col items-center justify-center text-xs text-center px-1'>
+                  <span>
+                    {item?.file?.name
+                      ? item.file.name.length > 10
+                        ? `${item.file.name.slice(0, 10)}...`
+                        : item.file.name
+                      : ''}
+                  </span>
+                  <FolderOpen className="w-4 h-4 mt-1 text-black-500 mr-auto" />
+                </div>
+              )}
             {
               !readonly && (
                 <div

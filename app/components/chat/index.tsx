@@ -47,10 +47,11 @@ const Chat: FC<IChatProps> = ({
   controlClearQuery,
   visionConfig,
 }) => {
-  console.log(visionConfig)
   const { t } = useTranslation()
   const { notify } = Toast
   const isUseInputMethod = useRef(false)
+  if (visionConfig)
+    visionConfig.enabled = true
 
   const [query, setQuery] = React.useState('')
   const handleContentChange = (e: any) => {
@@ -85,6 +86,7 @@ const Chat: FC<IChatProps> = ({
   } = useImageFiles()
 
   const handleSend = () => {
+    console.log(files)
     if (!valid() || (checkCanSend && !checkCanSend()))
       return
     onSend(query, files.filter(file => file.progress !== -1).map(fileItem => ({
@@ -149,7 +151,7 @@ const Chat: FC<IChatProps> = ({
           <div className={cn(!feedbackDisabled && '!left-3.5 !right-3.5', 'absolute z-10 bottom-0 left-0 right-0')}>
             <div className='p-[5.5px] max-h-[150px] bg-white border-[1.5px] border-gray-200 rounded-xl overflow-y-auto'>
               {
-                visionConfig?.enabled === false && (
+                visionConfig?.enabled === true && (
                   <>
                     <div className='absolute bottom-2 left-2 flex items-center'>
                       <ChatImageUploader
@@ -176,6 +178,7 @@ const Chat: FC<IChatProps> = ({
                   block w-full px-2 pr-[118px] py-[7px] leading-5 max-h-none text-sm text-gray-700 outline-none appearance-none resize-none
                   ${visionConfig?.enabled && 'pl-12'}
                 `}
+                style={{ paddingLeft: 40 }}
                 value={query}
                 onChange={handleContentChange}
                 onKeyUp={handleKeyUp}

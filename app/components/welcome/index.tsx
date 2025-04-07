@@ -89,7 +89,6 @@ const Welcome: FC<IWelcomeProps> = ({
   }
 
   const renderInputs = () => {
-    console.log(promptConfig)
     return (
       <div className='space-y-3'>
         {promptConfig.prompt_variables.map(item => (
@@ -102,7 +101,6 @@ const Welcome: FC<IWelcomeProps> = ({
                   defaultValue={inputs?.[item.key]}
                   onSelect={(i) => {
                     setInputs({ ...inputs, [item.key]: i.value })
-                    console.log(inputs)
                   }}
                   items={(item.options || []).map(i => ({ name: i, value: i }))}
                   allowSearch={false}

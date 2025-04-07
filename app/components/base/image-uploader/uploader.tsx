@@ -27,7 +27,6 @@ const Uploader: FC<UploaderProps> = ({
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-
     if (!file)
       return
 
@@ -87,10 +86,10 @@ const Uploader: FC<UploaderProps> = ({
         className={`
           absolute block inset-0 opacity-0 text-[0] w-full
           ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}
-        `}
+          `}
         onClick={e => (e.target as HTMLInputElement).value = ''}
         type='file'
-        accept='.png, .jpg, .jpeg, .webp, .gif'
+        accept='.png, .jpg, .jpeg, .webp, .gif .txt, .md, .mdx, .markdown, .pdf, .html, .xlsx, .xls, .doc, .docx, .csv, .eml, .msg, .pptx, .ppt, .xml, .epub'
         onChange={handleChange}
         disabled={disabled}
       />

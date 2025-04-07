@@ -44,7 +44,7 @@ const Main: FC<IMainProps> = () => {
   const [isShowSidebar, { setTrue: showSidebar, setFalse: hideSidebar }] = useBoolean(false)
   const [visionConfig, setVisionConfig] = useState<VisionSettings | undefined>({
     enabled: true,
-    number_limits: 2,
+    number_limits: 6,
     detail: Resolution.low,
     transfer_methods: [TransferMethod.local_file],
   })
@@ -253,7 +253,6 @@ const Main: FC<IMainProps> = () => {
           image_file_size_limit: system_parameters?.system_parameters || 0,
         })
         setConversationList(conversations as ConversationItem[])
-        console.log(file_upload)
 
         if (isNotNewConversation)
           setCurrConversationId(_conversationId, APP_ID, false)
@@ -261,7 +260,6 @@ const Main: FC<IMainProps> = () => {
         setInited(true)
       }
       catch (e: any) {
-        console.log(e)
         if (e.status === 404) {
           setAppUnavailable(true)
         }
@@ -338,18 +336,19 @@ const Main: FC<IMainProps> = () => {
       query: message,
       conversation_id: isNewConversation ? null : currConversationId,
     }
-
-    if (visionConfig?.enabled && files && files?.length > 0) {
+    if (files && files?.length > 0) {
       data.files = files.map((item) => {
-        if (item.transfer_method === TransferMethod.local_file) {
-          return {
-            ...item,
-            url: '',
-          }
-        }
+        // if (item.transfer_method === TransferMethod.local_file) {
+        //   return {
+        //     ...item,
+        //     url: '',
+        //   }
+        // }
         return item
       })
     }
+    if (!visionConfig?.enabled)
+      console.log(data)
 
     // question
     const questionId = `question-${Date.now()}`
