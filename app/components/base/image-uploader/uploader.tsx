@@ -1,16 +1,13 @@
-'use client'
-
 import type { ChangeEvent, FC } from 'react'
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { imageUpload } from './utils'
+import { useLocalFileUploader } from './hooks'
 import type { ImageFile } from '@/types/app'
-import { TransferMethod } from '@/types/app'
-import Toast from '@/app/components/base/toast'
+import { ALLOW_FILE_EXTENSIONS } from '@/config'
 
 type UploaderProps = {
-  children: (hovering: boolean) => JSX.Element
+  children: (hovering: boolean) => any
   onUpload: (imageFile: ImageFile) => void
+  closePopover?: () => void
   limit?: number
   disabled?: boolean
 }
@@ -18,61 +15,25 @@ type UploaderProps = {
 const Uploader: FC<UploaderProps> = ({
   children,
   onUpload,
+  closePopover,
   limit,
   disabled,
 }) => {
   const [hovering, setHovering] = useState(false)
-  const { notify } = Toast
-  const { t } = useTranslation()
+  const { handleLocalFileUpload } = useLocalFileUploader({
+    limit,
+    onUpload,
+    disabled,
+  })
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
+
     if (!file)
       return
 
-    if (limit && file.size > limit * 1024 * 1024) {
-      notify({ type: 'error', message: t('common.imageUploader.uploadFromComputerLimit', { size: limit }) })
-      return
-    }
-
-    const reader = new FileReader()
-    reader.addEventListener(
-      'load',
-      () => {
-        const imageFile = {
-          type: TransferMethod.local_file,
-          _id: `${Date.now()}`,
-          fileId: '',
-          file,
-          url: reader.result as string,
-          base64Url: reader.result as string,
-          progress: 0,
-        }
-        onUpload(imageFile)
-        imageUpload({
-          file: imageFile.file,
-          onProgressCallback: (progress) => {
-            onUpload({ ...imageFile, progress })
-          },
-          onSuccessCallback: (res) => {
-            onUpload({ ...imageFile, fileId: res.id, progress: 100 })
-          },
-          onErrorCallback: () => {
-            notify({ type: 'error', message: t('common.imageUploader.uploadFromComputerUploadError') })
-            onUpload({ ...imageFile, progress: -1 })
-          },
-        })
-      },
-      false,
-    )
-    reader.addEventListener(
-      'error',
-      () => {
-        notify({ type: 'error', message: t('common.imageUploader.uploadFromComputerReadError') })
-      },
-      false,
-    )
-    reader.readAsDataURL(file)
+    handleLocalFileUpload(file)
+    closePopover?.()
   }
 
   return (
@@ -83,13 +44,10 @@ const Uploader: FC<UploaderProps> = ({
     >
       {children(hovering)}
       <input
-        className={`
-          absolute block inset-0 opacity-0 text-[0] w-full
-          ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}
-          `}
-        onClick={e => (e.target as HTMLInputElement).value = ''}
+        className='absolute inset-0 block w-full cursor-pointer text-[0] opacity-0 disabled:cursor-not-allowed'
+        onClick={e => ((e.target as HTMLInputElement).value = '')}
         type='file'
-        accept='.png, .jpg, .jpeg, .webp, .gif .txt, .md, .mdx, .markdown, .pdf, .html, .xlsx, .xls, .doc, .docx, .csv, .eml, .msg, .pptx, .ppt, .xml, .epub'
+        accept={ALLOW_FILE_EXTENSIONS.map(ext => `.${ext}`).join(',')}
         onChange={handleChange}
         disabled={disabled}
       />

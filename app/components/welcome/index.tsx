@@ -1,15 +1,16 @@
 'use client'
 import type { FC } from 'react'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import TemplateVarPanel, { PanelTitle, VarOpBtnGroup } from '../value-panel'
+import { FileUploaderInAttachmentWrapper } from '../base/file-uploader'
+import { useChatWithHistoryContext } from '../base/context/context'
 import s from './style.module.css'
 import { AppInfoComp, ChatBtn, EditBtn, FootLogo, PromptTemplate } from './massive-component'
 import type { AppInfo, PromptConfig } from '@/types/app'
 import Toast from '@/app/components/base/toast'
 import Select from '@/app/components/base/select'
 import { DEFAULT_VALUE_MAX_LEN } from '@/config'
-
 // regex to match the {{}} and replace it with a span
 const regex = /\{\{([^}]+)\}\}/g
 
@@ -37,6 +38,17 @@ const Welcome: FC<IWelcomeProps> = ({
   onInputsChange,
 }) => {
   const { t } = useTranslation()
+  const {
+    appParams,
+    inputsForms,
+    currentConversationId,
+    currentConversationInputs,
+    setCurrentConversationInputs,
+    newConversationInputs,
+    newConversationInputsRef,
+    handleNewConversationInputsChange,
+  } = useChatWithHistoryContext()
+  const inputsFormValue = currentConversationId ? currentConversationInputs : newConversationInputs
   const hasVar = promptConfig.prompt_variables.length > 0
   const [isFold, setIsFold] = useState<boolean>(true)
   const [inputs, setInputs] = useState<Record<string, any>>((() => {
@@ -87,7 +99,16 @@ const Welcome: FC<IWelcomeProps> = ({
       </div>
     )
   }
-
+  const handleFormChange = useCallback((variable: string, value: any) => {
+    setCurrentConversationInputs({
+      ...currentConversationInputs,
+      [variable]: value,
+    })
+    handleNewConversationInputsChange({
+      ...newConversationInputsRef.current,
+      [variable]: value,
+    })
+  }, [newConversationInputsRef, handleNewConversationInputsChange, currentConversationInputs, setCurrentConversationInputs])
   const renderInputs = () => {
     return (
       <div className='space-y-3'>
@@ -131,6 +152,19 @@ const Welcome: FC<IWelcomeProps> = ({
                 placeholder={`${item.name}${!item.required ? `(${t('appDebug.variableTable.optional')})` : ''}`}
                 value={inputs[item.key]}
                 onChange={(e) => { onInputsChange({ ...inputs, [item.key]: e.target.value }) }}
+              />
+            )}
+            {item.type === 'file' && (
+              <FileUploaderInAttachmentWrapper
+                value={inputs?.[item.key] ? [inputs?.[item.key]] : []}
+                onChange={files => handleFormChange(variable, files[0])}
+                fileConfig={{
+                  allowed_file_types: item.allowed_file_types,
+                  allowed_file_extensions: item.allowed_file_extensions,
+                  allowed_file_upload_methods: item.allowed_file_upload_methods,
+                  number_limits: 1,
+                  fileUploadConfig: (form as any).fileUploadConfig,
+                }}
               />
             )}
           </div>
@@ -327,7 +361,6 @@ const Welcome: FC<IWelcomeProps> = ({
 
         {/* Has set inputs */}
         {hasSetInputs && renderHasSetInputs()}
-
         {/* foot */}
         {!hasSetInputs && (
           <div className='mt-4 flex justify-between items-center h-8 text-xs text-gray-400'>

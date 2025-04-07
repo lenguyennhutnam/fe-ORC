@@ -5,11 +5,16 @@ import type { ThoughtItem } from '@/app/components/chat/type'
 export type PromptVariable = {
   key: string
   name: string
-  type: string
+  type: string // "string" | "number" | "select",
   default?: string | number
+  required?: boolean
   options?: string[]
   max_length?: number
-  required: boolean
+  is_context_var?: boolean
+  enabled?: boolean
+  config?: Record<string, any>
+  icon?: string
+  icon_background?: string
 }
 
 export type PromptConfig = {
@@ -219,4 +224,59 @@ export enum CodeLanguage {
   python3 = 'python3',
   javascript = 'javascript',
   json = 'json',
+}
+
+export type UserInputForm = {
+  default: string
+  label: string
+  required: boolean
+  variable: string
+}
+
+export type UserInputFormTextInput = {
+  'text-input': UserInputForm & {
+    max_length: number
+  }
+}
+
+export type UserInputFormSelect = {
+  select: UserInputForm & {
+    options: string[]
+  }
+}
+
+export type UserInputFormParagraph = {
+  paragraph: UserInputForm
+}
+
+export type VisionConfig = VisionSettings
+
+export type EnableType = {
+  enabled: boolean
+}
+
+export type ChatConfig = Omit<any, 'model'> & {
+  supportAnnotation?: boolean
+  appId?: string
+  supportFeedback?: boolean
+  supportCitationHitInfo?: boolean
+}
+
+export type ChatItemInTree = {
+  children?: ChatItemInTree[]
+} & ChatItem
+
+export type OnSend = {
+  (message: string, files?: any): void
+  (message: string, files: any | undefined, isRegenerate: boolean, lastAnswer?: ChatItem | null): void
+}
+
+export type OnRegenerate = (chatItem: ChatItem) => void
+
+export type Callback = {
+  onSuccess: () => void
+}
+
+export type Feedback = {
+  rating: 'like' | 'dislike' | null
 }

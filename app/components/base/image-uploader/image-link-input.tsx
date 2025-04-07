@@ -1,21 +1,26 @@
 import type { FC } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import Button from '@/app/components/base/button'
+import Button from '../button/newBtn'
 import type { ImageFile } from '@/types/app'
 import { TransferMethod } from '@/types/app'
 
 type ImageLinkInputProps = {
   onUpload: (imageFile: ImageFile) => void
+  disabled?: boolean
 }
 const regex = /^(https?|ftp):\/\//
 const ImageLinkInput: FC<ImageLinkInputProps> = ({
   onUpload,
+  disabled,
 }) => {
   const { t } = useTranslation()
   const [imageLink, setImageLink] = useState('')
 
   const handleClick = () => {
+    if (disabled)
+      return
+
     const imageFile = {
       type: TransferMethod.remote_url,
       _id: `${Date.now()}`,
@@ -28,17 +33,18 @@ const ImageLinkInput: FC<ImageLinkInputProps> = ({
   }
 
   return (
-    <div className='flex items-center pl-1.5 pr-1 h-8 border border-gray-200 bg-white shadow-xs rounded-lg'>
+    <div className='flex h-8 items-center rounded-lg border border-components-panel-border bg-components-panel-bg pl-1.5 pr-1 shadow-xs'>
       <input
-        className='grow mr-0.5 px-1 h-[18px] text-[13px] outline-none appearance-none'
+        type="text"
+        className='mr-0.5 h-[18px] grow appearance-none bg-transparent px-1 text-[13px] text-text-primary outline-none'
         value={imageLink}
         onChange={e => setImageLink(e.target.value)}
         placeholder={t('common.imageUploader.pasteImageLinkInputPlaceholder') || ''}
       />
       <Button
-        type='primary'
-        className='!h-6 text-xs font-medium'
-        disabled={!imageLink}
+        variant='primary'
+        size='small'
+        disabled={!imageLink || disabled}
         onClick={handleClick}
       >
         {t('common.operation.ok')}
