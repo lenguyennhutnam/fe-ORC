@@ -9,7 +9,7 @@ import Field from '@/app/components/workflow/nodes/_base/components/field'
 import Switch from '@/app/components/base/switch'
 import { type ValueSelector, type Var, VarType, type VisionSetting } from '@/app/components/workflow/types'
 import { Resolution } from '@/types/app'
-import Tooltip from '@/app/components/base/tooltipNew'
+import Tooltip from '@/app/components/base/tooltip'
 const i18nPrefix = 'workflow.nodes.llm'
 
 type Props = {

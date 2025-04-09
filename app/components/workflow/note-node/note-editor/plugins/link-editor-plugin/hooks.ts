@@ -92,7 +92,7 @@ export const useLink = () => {
 
   const handleSaveLink = useCallback((url: string) => {
     if (url && !urlRegExp.test(url)) {
-      notify({ type: 'error', message: t('workflow.nodes.note.editor.invalidUrl') })
+      Toast.notify({ type: 'error', message: t('workflow.nodes.note.editor.invalidUrl') })
       return
     }
     editor.dispatchCommand(TOGGLE_LINK_COMMAND, escape(url))

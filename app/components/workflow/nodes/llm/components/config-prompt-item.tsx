@@ -8,7 +8,7 @@ import { EditionType } from '../../../types'
 import { useWorkflowStore } from '../../../store'
 import Editor from '@/app/components/workflow/nodes/_base/components/prompt/editor'
 import TypeSelector from '@/app/components/workflow/nodes/_base/components/selector'
-import Tooltip from '@/app/components/base/tooltipNew'
+import Tooltip from '@/app/components/base/tooltip'
 import { PromptRole } from '@/models/debug'
 
 const i18nPrefix = 'workflow.nodes.llm'

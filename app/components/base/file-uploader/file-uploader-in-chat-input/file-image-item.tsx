@@ -9,10 +9,10 @@ import {
   downloadFile,
   fileIsUploaded,
 } from '../utils'
-import { ReplayLine } from '../../iconsNew/src/vender/other'
-import ImagePreview from '../../image-uploader/image-preview'
 import Button from '@/app/components/base/button'
 import ProgressCircle from '@/app/components/base/progress-bar/progress-circle'
+import { ReplayLine } from '@/app/components/base/icons/src/vender/other'
+import ImagePreview from '@/app/components/base/image-uploader/image-preview'
 
 type FileImageItemProps = {
   file: FileEntity

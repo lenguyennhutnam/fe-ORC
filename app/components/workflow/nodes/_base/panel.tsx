@@ -42,7 +42,7 @@ import {
   hasErrorHandleNode,
   hasRetryNode,
 } from '@/app/components/workflow/utils'
-import Tooltip from '@/app/components/base/tooltipNew'
+import Tooltip from '@/app/components/base/tooltip'
 import type { Node } from '@/app/components/workflow/types'
 import { useStore as useAppStore } from '@/app/components/app/store'
 import { useStore } from '@/app/components/workflow/store'

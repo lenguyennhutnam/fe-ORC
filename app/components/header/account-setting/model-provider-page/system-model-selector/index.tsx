@@ -101,7 +101,7 @@ const SystemModel: FC<SystemModelSelectorProps> = ({
       },
     })
     if (res.result === 'success') {
-      notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
+      Toast.notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
       setOpen(false)
 
       changedModelTypes.forEach((modelType) => {

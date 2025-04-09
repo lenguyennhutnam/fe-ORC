@@ -52,7 +52,7 @@ const InviteModal = ({
       catch (e) { }
     }
     else {
-      notify({ type: 'error', message: t('common.members.emailInvalid') })
+      Toast.notify({ type: 'error', message: t('common.members.emailInvalid') })
     }
   }, [role, emails, notify, onCancel, onSend, t])
 

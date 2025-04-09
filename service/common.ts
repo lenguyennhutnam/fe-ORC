@@ -21,8 +21,8 @@ import type {
   ProviderAzureToken,
   SetupStatusResponse,
   UserProfileOriginResponse,
-} from '@/app/models/common'
-import type { UpdateOpenAIKeyResponse, ValidateOpenAIKeyResponse } from '@/app/models/app'
+} from '@/models/common'
+import type { UpdateOpenAIKeyResponse, ValidateOpenAIKeyResponse } from '@/models/app'
 
 type LoginSuccess = {
   result: 'success'
@@ -244,6 +244,7 @@ export const fetchModelParameterRules: Fetcher<{ data: any[] }, string> = (url) 
 }
 
 export const fetchFileUploadConfig: Fetcher<FileUploadConfigResponse, { url: string }> = ({ url }) => {
+  console.log(222)
   return get<FileUploadConfigResponse>(url)
 }
 

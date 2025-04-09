@@ -14,7 +14,7 @@ import Toast from '../../base/toast'
 import Tooltip from '../../base/tooltip'
 import cn from '@/utils/classnames'
 import { useProviderContext } from '@/context/provider-context'
-import { Plan } from '@/app/components/billing/type'
+// import { Plan } from '@/app/components/billing/type'
 import { useModalContext } from '@/context/modal-context'
 import { getDocDownloadUrl } from '@/service/common'
 

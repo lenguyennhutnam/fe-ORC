@@ -21,16 +21,16 @@ import {
   MAX_TREE_DEPTH,
 } from '../constants'
 import type { ToolNodeType } from '../nodes/tool/types'
+import type { AgentNodeType } from '../nodes/agent/types'
+import { useDatasetsDetailStore } from '../datasets-detail-store/store'
+import type { KnowledgeRetrievalNodeType } from '../nodes/knowledge-retrieval/types'
 import { useIsChatMode } from './use-workflow'
 import { useNodesExtraData } from './use-nodes-data'
 import { useToastContext } from '@/app/components/base/toast'
 import { CollectionType } from '@/app/components/tools/types'
 import { useGetLanguage } from '@/context/i18n'
-import type { AgentNodeType } from '../nodes/agent/types'
 import { useStrategyProviders } from '@/service/use-strategy'
 import { canFindTool } from '@/utils'
-import { useDatasetsDetailStore } from '../datasets-detail-store/store'
-import type { KnowledgeRetrievalNodeType } from '../nodes/knowledge-retrieval/types'
 import type { DataSet } from '@/models/datasets'
 import { fetchDatasets } from '@/service/datasets'
 
@@ -186,7 +186,7 @@ export const useChecklistBeforePublish = () => {
     } = getValidTreeNodes(nodes.filter(node => node.type === CUSTOM_NODE), edges)
 
     if (maxDepth > MAX_TREE_DEPTH) {
-      notify({ type: 'error', message: t('workflow.common.maxTreeDepth', { depth: MAX_TREE_DEPTH }) })
+      Toast.notify({ type: 'error', message: t('workflow.common.maxTreeDepth', { depth: MAX_TREE_DEPTH }) })
       return false
     }
     // Before publish, we need to fetch datasets detail, in case of the settings of datasets have been changed
@@ -231,23 +231,23 @@ export const useChecklistBeforePublish = () => {
       const { errorMessage } = nodesExtraData[node.data.type as BlockEnum].checkValid(checkData, t, moreDataForCheckValid)
 
       if (errorMessage) {
-        notify({ type: 'error', message: `[${node.data.title}] ${errorMessage}` })
+        Toast.notify({ type: 'error', message: `[${node.data.title}] ${errorMessage}` })
         return false
       }
 
       if (!validNodes.find(n => n.id === node.id)) {
-        notify({ type: 'error', message: `[${node.data.title}] ${t('workflow.common.needConnectTip')}` })
+        Toast.notify({ type: 'error', message: `[${node.data.title}] ${t('workflow.common.needConnectTip')}` })
         return false
       }
     }
 
     if (isChatMode && !nodes.find(node => node.data.type === BlockEnum.Answer)) {
-      notify({ type: 'error', message: t('workflow.common.needAnswerNode') })
+      Toast.notify({ type: 'error', message: t('workflow.common.needAnswerNode') })
       return false
     }
 
     if (!isChatMode && !nodes.find(node => node.data.type === BlockEnum.End)) {
-      notify({ type: 'error', message: t('workflow.common.needEndNode') })
+      Toast.notify({ type: 'error', message: t('workflow.common.needEndNode') })
       return false
     }
 

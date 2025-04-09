@@ -55,7 +55,7 @@ const SerpapiPlugin = ({
     })
 
     if (res.status === 'success') {
-      notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
+      Toast.notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
       onUpdate()
       return true
     }

@@ -1,8 +1,8 @@
 import { useFile } from './hooks'
 import { useStore } from './store'
-import { SupportUploadFileTypes } from './file-uploader-in-chat-input/file-list'
-import type { FileUpload } from '@/config/types'
-import { FILE_EXTS } from '@/utils'
+import type { FileUpload } from '@/app/components/base/features/types'
+import { FILE_EXTS } from '@/app/components/base/prompt-editor/constants'
+import { SupportUploadFileTypes } from '@/app/components/workflow/types'
 
 type FileInputProps = {
   fileConfig: FileUpload
@@ -11,6 +11,7 @@ const FileInput = ({
   fileConfig,
 }: FileInputProps) => {
   const files = useStore(s => s.files)
+  console.log(fileConfig)
   const { handleLocalFileUpload } = useFile(fileConfig)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const targetFiles = e.target.files

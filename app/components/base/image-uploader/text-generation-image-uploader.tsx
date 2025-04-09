@@ -5,12 +5,12 @@ import {
   useState,
 } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ImagePlus } from '../iconsNew/src/vender/line/images'
-import { Link03 } from '../iconsNew/src/vender/line/general'
 import Uploader from './uploader'
 import ImageLinkInput from './image-link-input'
 import ImageList from './image-list'
 import { useImageFiles } from './hooks'
+import { ImagePlus } from '@/app/components/base/icons/src/vender/line/images'
+import { Link03 } from '@/app/components/base/icons/src/vender/line/general'
 import {
   PortalToFollowElem,
   PortalToFollowElemContent,

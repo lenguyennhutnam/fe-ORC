@@ -39,7 +39,7 @@ const ApiBasedExtensionModal: FC<ApiBasedExtensionModalProps> = ({
     setLoading(true)
 
     if (localeData && localeData.api_key && localeData.api_key?.length < 5) {
-      notify({ type: 'error', message: t('common.apiBasedExtension.modal.apiKey.lengthError') })
+      Toast.notify({ type: 'error', message: t('common.apiBasedExtension.modal.apiKey.lengthError') })
       setLoading(false)
       return
     }
@@ -61,7 +61,7 @@ const ApiBasedExtensionModal: FC<ApiBasedExtensionModalProps> = ({
           },
         })
 
-        notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
+        Toast.notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
       }
 
       if (onSave)

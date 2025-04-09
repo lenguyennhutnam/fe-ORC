@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { mailToSupport } from '../utils/util'
 import cn from '@/utils/classnames'
 import { useProviderContext } from '@/context/provider-context'
-import { Plan } from '@/app/components/billing/type'
+// import { Plan } from '@/app/components/billing/type'
 import { useAppContext } from '@/context/app-context'
 
 export default function Support() {

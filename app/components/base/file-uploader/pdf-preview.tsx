@@ -2,13 +2,14 @@ import type { FC } from 'react'
 import { createPortal } from 'react-dom'
 import 'react-pdf-highlighter/dist/style.css'
 import { PdfHighlighter, PdfLoader } from 'react-pdf-highlighter'
+import { t } from 'i18next'
+import { RiCloseLine, RiZoomInLine, RiZoomOutLine } from '@remixicon/react'
 import React, { useState } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
-import { RiCloseLine, RiZoomInLine, RiZoomOutLine } from '@remixicon/react'
-import { t } from 'i18next'
-import Tooltip from '../tooltipNew'
 import Loading from '@/app/components/base/loading'
 import useBreakpoints, { MediaType } from '@/hooks/use-breakpoints'
+import Tooltip from '@/app/components/base/tooltip'
+import { noop } from 'lodash-es'
 
 type PdfPreviewProps = {
   url: string
@@ -60,15 +61,15 @@ const PdfPreview: FC<PdfPreviewProps> = ({
           url={url}
           beforeLoad={<div className='flex h-64 items-center justify-center'><Loading type='app' /></div>}
         >
-          {(pdfDocument: any) => {
+          {(pdfDocument) => {
             return (
               <PdfHighlighter
                 pdfDocument={pdfDocument}
-                enableAreaSelection={(event: any) => event.altKey}
-                scrollRef={() => { }}
-                onScrollChange={() => { }}
+                enableAreaSelection={event => event.altKey}
+                scrollRef={noop}
+                onScrollChange={noop}
                 onSelectionFinished={() => null}
-                highlightTransform={() => { return <div /> }}
+                highlightTransform={() => { return <div/> }}
                 highlights={[]}
               />
             )
@@ -78,20 +79,20 @@ const PdfPreview: FC<PdfPreviewProps> = ({
       <Tooltip popupContent={t('common.operation.zoomOut')}>
         <div className='absolute right-24 top-6 flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg'
           onClick={zoomOut}>
-          <RiZoomOutLine className='h-4 w-4 text-gray-500' />
+          <RiZoomOutLine className='h-4 w-4 text-gray-500'/>
         </div>
       </Tooltip>
       <Tooltip popupContent={t('common.operation.zoomIn')}>
         <div className='absolute right-16 top-6 flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg'
           onClick={zoomIn}>
-          <RiZoomInLine className='h-4 w-4 text-gray-500' />
+          <RiZoomInLine className='h-4 w-4 text-gray-500'/>
         </div>
       </Tooltip>
       <Tooltip popupContent={t('common.operation.cancel')}>
         <div
           className='absolute right-6 top-6 flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-white/8 backdrop-blur-[2px]'
           onClick={onCancel}>
-          <RiCloseLine className='h-4 w-4 text-gray-500' />
+          <RiCloseLine className='h-4 w-4 text-gray-500'/>
         </div>
       </Tooltip>
     </div>,

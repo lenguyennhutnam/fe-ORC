@@ -13,7 +13,7 @@ import {
 import { useStore } from '../store'
 import { useCommand } from './hooks'
 import cn from '@/utils/classnames'
-import Tooltip from '@/app/components/base/tooltipNew'
+import Tooltip from '@/app/components/base/tooltip'
 
 type CommandProps = {
   type: 'bold' | 'italic' | 'strikethrough' | 'link' | 'bullet'

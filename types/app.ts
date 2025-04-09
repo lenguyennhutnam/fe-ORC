@@ -2,6 +2,11 @@ import type { Annotation } from './log'
 import type { Locale } from '@/i18n'
 // import type { ThoughtItem } from '@/app/components/chat/types'
 
+export enum RETRIEVE_TYPE {
+  oneWay = 'single',
+  multiWay = 'multiple',
+}
+
 export type PromptVariable = {
   key: string
   name: string

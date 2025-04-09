@@ -25,7 +25,6 @@ import {
   del as consoleDel, get as consoleGet, patch as consolePatch, post as consolePost,
   delPublic as del, getPublic as get, patchPublic as patch, postPublic as post, ssePost,
 } from './base'
-import type { ChatConfig } from '@/app/components/chat/types'
 
 function getAction(action: 'get' | 'post' | 'del' | 'patch', isInstalledApp: boolean) {
   switch (action) {
@@ -41,6 +40,7 @@ function getAction(action: 'get' | 'post' | 'del' | 'patch', isInstalledApp: boo
 }
 
 export function getUrl(url: string, isInstalledApp: boolean, installedAppId: string) {
+  console.log(isInstalledApp ? `installed-apps/${installedAppId}/${url.startsWith('/') ? url.slice(1) : url}` : url)
   return isInstalledApp ? `installed-apps/${installedAppId}/${url.startsWith('/') ? url.slice(1) : url}` : url
 }
 
@@ -174,9 +174,9 @@ export const fetchChatList = async (conversationId: string, isInstalledApp: bool
 // }
 
 // init value. wait for server update
-export const fetchAppParams = async (isInstalledApp: boolean, installedAppId = '') => {
-  return (getAction('get', isInstalledApp))(getUrl('parameters', isInstalledApp, installedAppId)) as Promise<ChatConfig>
-}
+// export const fetchAppParams = async (isInstalledApp: boolean, installedAppId = '') => {
+//   return (getAction('get', isInstalledApp))(getUrl('parameters', isInstalledApp, installedAppId)) as Promise<ChatConfig>
+// }
 
 export const fetchSystemFeatures = async () => {
   return (getAction('get', false))(getUrl('system-features', false, '')) as Promise<any>

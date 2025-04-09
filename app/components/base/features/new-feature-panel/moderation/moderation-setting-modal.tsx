@@ -198,17 +198,17 @@ const ModerationSettingModal: FC<ModerationSettingModalProps> = ({
       return
 
     if (!localeData.config?.inputs_config?.enabled && !localeData.config?.outputs_config?.enabled) {
-      notify({ type: 'error', message: t('appDebug.feature.moderation.modal.content.condition') })
+      Toast.notify({ type: 'error', message: t('appDebug.feature.moderation.modal.content.condition') })
       return
     }
 
     if (localeData.type === 'keywords' && !localeData.config.keywords) {
-      notify({ type: 'error', message: t('appDebug.errorMessage.valueOfVarRequired', { key: locale !== LanguagesSupported[1] ? 'keywords' : '关键词' }) })
+      Toast.notify({ type: 'error', message: t('appDebug.errorMessage.valueOfVarRequired', { key: locale !== LanguagesSupported[1] ? 'keywords' : '关键词' }) })
       return
     }
 
     if (localeData.type === 'api' && !localeData.config.api_based_extension_id) {
-      notify({ type: 'error', message: t('appDebug.errorMessage.valueOfVarRequired', { key: locale !== LanguagesSupported[1] ? 'API Extension' : 'API 扩展' }) })
+      Toast.notify({ type: 'error', message: t('appDebug.errorMessage.valueOfVarRequired', { key: locale !== LanguagesSupported[1] ? 'API Extension' : 'API 扩展' }) })
       return
     }
 
@@ -225,12 +225,12 @@ const ModerationSettingModal: FC<ModerationSettingModalProps> = ({
     }
 
     if (localeData.config.inputs_config?.enabled && !localeData.config.inputs_config.preset_response && localeData.type !== 'api') {
-      notify({ type: 'error', message: t('appDebug.feature.moderation.modal.content.errorMessage') })
+      Toast.notify({ type: 'error', message: t('appDebug.feature.moderation.modal.content.errorMessage') })
       return
     }
 
     if (localeData.config.outputs_config?.enabled && !localeData.config.outputs_config.preset_response && localeData.type !== 'api') {
-      notify({ type: 'error', message: t('appDebug.feature.moderation.modal.content.errorMessage') })
+      Toast.notify({ type: 'error', message: t('appDebug.feature.moderation.modal.content.errorMessage') })
       return
     }
 
@@ -245,7 +245,7 @@ const ModerationSettingModal: FC<ModerationSettingModalProps> = ({
     >
       <div className='flex items-center justify-between'>
         <div className='title-2xl-semi-bold text-text-primary'>{t('appDebug.feature.moderation.modal.title')}</div>
-        <div className='cursor-pointer p-1' onClick={onCancel}><RiCloseLine className='h-4 w-4 text-text-tertiary'/></div>
+        <div className='cursor-pointer p-1' onClick={onCancel}><RiCloseLine className='h-4 w-4 text-text-tertiary' /></div>
       </div>
       <div className='py-2'>
         <div className='text-sm font-medium leading-9 text-text-primary'>

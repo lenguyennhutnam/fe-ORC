@@ -20,7 +20,7 @@ import ChatWrapper from './chat-wrapper'
 import cn from '@/utils/classnames'
 import { RefreshCcw01 } from '@/app/components/base/icons/src/vender/line/arrows'
 import { BubbleX } from '@/app/components/base/icons/src/vender/line/others'
-import Tooltip from '@/app/components/base/tooltipNew'
+import Tooltip from '@/app/components/base/tooltip'
 import ActionButton, { ActionButtonState } from '@/app/components/base/action-button'
 import { useStore } from '@/app/components/workflow/store'
 
@@ -121,7 +121,7 @@ const DebugAndPreview = () => {
                   <RiEqualizer2Line className='h-4 w-4' />
                 </ActionButton>
               </Tooltip>
-              {expanded && <div className='absolute bottom-[-17px] right-[5px] z-10 h-3 w-3 rotate-45 border-l-[0.5px] border-t-[0.5px] border-components-panel-border-subtle bg-components-panel-on-panel-item-bg'/>}
+              {expanded && <div className='absolute bottom-[-17px] right-[5px] z-10 h-3 w-3 rotate-45 border-l-[0.5px] border-t-[0.5px] border-components-panel-border-subtle bg-components-panel-on-panel-item-bg' />}
             </div>
           )}
           <div className='mx-3 h-3.5 w-[1px] bg-gray-200'></div>

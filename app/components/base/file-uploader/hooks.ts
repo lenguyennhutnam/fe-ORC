@@ -7,6 +7,7 @@ import { useParams } from 'next/navigation'
 import produce from 'immer'
 import { v4 as uuid4 } from 'uuid'
 import { useTranslation } from 'react-i18next'
+import { noop } from 'lodash-es'
 import type { FileEntity } from './types'
 import { useFileStore } from './store'
 import {
@@ -14,7 +15,6 @@ import {
   getSupportFileType,
   isAllowedFileExtension,
 } from './utils'
-import { SupportUploadFileTypes } from './file-uploader-in-chat-input/file-list'
 import {
   AUDIO_SIZE_LIMIT,
   FILE_SIZE_LIMIT,
@@ -24,9 +24,11 @@ import {
 } from '@/app/components/base/file-uploader/constants'
 import { useToastContext } from '@/app/components/base/toast'
 import { TransferMethod } from '@/types/app'
+import { SupportUploadFileTypes } from '@/app/components/workflow/types'
+import type { FileUpload } from '@/app/components/base/features/types'
 import { formatFileSize } from '@/utils/format'
-import { uploadRemoteFileInfo } from '@/utils'
-import type { FileUploadConfigResponse } from '@/config/types'
+import { uploadRemoteFileInfo } from '@/service/common'
+import type { FileUploadConfigResponse } from '@/models/common'
 
 export const useFileSizeLimit = (fileUploadConfig?: FileUploadConfigResponse) => {
   const imgSizeLimit = Number(fileUploadConfig?.image_file_size_limit) * 1024 * 1024 || IMG_SIZE_LIMIT
@@ -44,7 +46,8 @@ export const useFileSizeLimit = (fileUploadConfig?: FileUploadConfigResponse) =>
   }
 }
 
-export const useFile = (fileConfig: any) => {
+export const useFile = (fileConfig: FileUpload) => {
+  console.log(fileConfig)
   const { t } = useTranslation()
   const { notify } = useToastContext()
   const fileStore = useFileStore()
@@ -130,7 +133,7 @@ export const useFile = (fileConfig: any) => {
       setFiles,
     } = fileStore.getState()
 
-    const newFiles = produce(files, (draft: any) => {
+    const newFiles = produce(files, (draft) => {
       draft.push(newFile)
     })
     setFiles(newFiles)
@@ -142,8 +145,8 @@ export const useFile = (fileConfig: any) => {
       setFiles,
     } = fileStore.getState()
 
-    const newFiles = produce(files, (draft: any) => {
-      const index = draft.findIndex((file: any) => file.id === newFile.id)
+    const newFiles = produce(files, (draft) => {
+      const index = draft.findIndex(file => file.id === newFile.id)
 
       if (index > -1)
         draft[index] = newFile
@@ -157,7 +160,7 @@ export const useFile = (fileConfig: any) => {
       setFiles,
     } = fileStore.getState()
 
-    const newFiles = files.filter((file: any) => file.id !== fileId)
+    const newFiles = files.filter(file => file.id !== fileId)
     setFiles(newFiles)
   }, [fileStore])
 
@@ -166,11 +169,11 @@ export const useFile = (fileConfig: any) => {
       files,
       setFiles,
     } = fileStore.getState()
-    const index = files.findIndex((file: any) => file.id === fileId)
+    const index = files.findIndex(file => file.id === fileId)
 
     if (index > -1) {
       const uploadingFile = files[index]
-      const newFiles = produce(files, (draft: any) => {
+      const newFiles = produce(files, (draft) => {
         draft[index].progress = 0
       })
       setFiles(newFiles)
@@ -183,7 +186,7 @@ export const useFile = (fileConfig: any) => {
           handleUpdateFile({ ...uploadingFile, uploadedId: res.id, progress: 100 })
         },
         onErrorCallback: () => {
-          notify({ type: 'error', message: t('common.fileUploader.uploadFromComputerUploadError') })
+          Toast.notify({ type: 'error', message: t('common.fileUploader.uploadFromComputerUploadError') })
           handleUpdateFile({ ...uploadingFile, progress: -1 })
         },
       }, !!params.token)
@@ -193,7 +196,7 @@ export const useFile = (fileConfig: any) => {
   const startProgressTimer = useCallback((fileId: string) => {
     const timer = setInterval(() => {
       const files = fileStore.getState().files
-      const file = files.find((file: any) => file.id === fileId)
+      const file = files.find(file => file.id === fileId)
 
       if (file && file.progress < 80 && file.progress >= 0)
         handleUpdateFile({ ...file, progress: file.progress + 20 })
@@ -229,7 +232,7 @@ export const useFile = (fileConfig: any) => {
         url: res.url,
       }
       if (!isAllowedFileExtension(res.name, res.mime_type, fileConfig.allowed_file_types || [], fileConfig.allowed_file_extensions || [])) {
-        notify({ type: 'error', message: t('common.fileUploader.fileExtensionNotSupport') })
+        Toast.notify({ type: 'error', message: t('common.fileUploader.fileExtensionNotSupport') })
         handleRemoveFile(uploadingFile.id)
       }
       if (!checkSizeLimit(newFile.supportFileType, newFile.size))
@@ -237,14 +240,14 @@ export const useFile = (fileConfig: any) => {
       else
         handleUpdateFile(newFile)
     }).catch(() => {
-      notify({ type: 'error', message: t('common.fileUploader.pasteFileLinkInvalid') })
+      Toast.notify({ type: 'error', message: t('common.fileUploader.pasteFileLinkInvalid') })
       handleRemoveFile(uploadingFile.id)
     })
   }, [checkSizeLimit, handleAddFile, handleUpdateFile, notify, t, handleRemoveFile, fileConfig?.allowed_file_types, fileConfig.allowed_file_extensions, startProgressTimer, params.token])
 
-  const handleLoadFileFromLinkSuccess = useCallback(() => { }, [])
+  const handleLoadFileFromLinkSuccess = useCallback(noop, [])
 
-  const handleLoadFileFromLinkError = useCallback(() => { }, [])
+  const handleLoadFileFromLinkError = useCallback(noop, [])
 
   const handleClearFiles = useCallback(() => {
     const {
@@ -255,7 +258,7 @@ export const useFile = (fileConfig: any) => {
 
   const handleLocalFileUpload = useCallback((file: File) => {
     if (!isAllowedFileExtension(file.name, file.type, fileConfig.allowed_file_types || [], fileConfig.allowed_file_extensions || [])) {
-      notify({ type: 'error', message: t('common.fileUploader.fileExtensionNotSupport') })
+      Toast.notify({ type: 'error', message: t('common.fileUploader.fileExtensionNotSupport') })
       return
     }
     const allowedFileTypes = fileConfig.allowed_file_types
@@ -290,7 +293,7 @@ export const useFile = (fileConfig: any) => {
             handleUpdateFile({ ...uploadingFile, uploadedId: res.id, progress: 100 })
           },
           onErrorCallback: () => {
-            notify({ type: 'error', message: t('common.fileUploader.uploadFromComputerUploadError') })
+            Toast.notify({ type: 'error', message: t('common.fileUploader.uploadFromComputerUploadError') })
             handleUpdateFile({ ...uploadingFile, progress: -1 })
           },
         }, !!params.token)
@@ -300,7 +303,7 @@ export const useFile = (fileConfig: any) => {
     reader.addEventListener(
       'error',
       () => {
-        notify({ type: 'error', message: t('common.fileUploader.uploadFromComputerReadError') })
+        Toast.notify({ type: 'error', message: t('common.fileUploader.uploadFromComputerReadError') })
       },
       false,
     )

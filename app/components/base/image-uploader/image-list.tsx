@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/indent */
 import type { FC } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -6,10 +5,10 @@ import {
   RiCloseLine,
   RiLoader2Line,
 } from '@remixicon/react'
-import cn from 'classnames'
-import { RefreshCcw01 } from '../iconsNew/src/vender/line/arrows'
-import { AlertTriangle } from '../iconsNew/src/vender/line/alertsAndFeedback'
-import Tooltip from '@/app/components/base/tooltipNew'
+import cn from '@/utils/classnames'
+import { RefreshCcw01 } from '@/app/components/base/icons/src/vender/line/arrows'
+import { AlertTriangle } from '@/app/components/base/icons/src/vender/solid/alertsAndFeedback'
+import Tooltip from '@/app/components/base/tooltip'
 import type { ImageFile } from '@/types/app'
 import { TransferMethod } from '@/types/app'
 import ImagePreview from '@/app/components/base/image-uploader/image-preview'
@@ -79,9 +78,9 @@ const ImageList: FC<ImageListProps> = ({
               className={`
                   absolute inset-0 z-[1] flex items-center justify-center rounded-lg border
                   ${item.progress === -1
-                  ? 'border-[#DC6803] bg-[#FEF0C7]'
-                  : 'border-transparent bg-black/[0.16]'
-                }
+              ? 'border-[#DC6803] bg-[#FEF0C7]'
+              : 'border-transparent bg-black/[0.16]'
+            }
                 `}
             >
               {item.progress > -1 && (

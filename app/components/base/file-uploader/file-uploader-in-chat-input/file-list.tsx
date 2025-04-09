@@ -1,20 +1,15 @@
 import { useFile } from '../hooks'
 import { useStore } from '../store'
+import type { FileEntity } from '../types'
 import FileImageItem from './file-image-item'
 import FileItem from './file-item'
-import cn from '@/config/classnames'
-
-export enum SupportUploadFileTypes {
-  image = 'image',
-  document = 'document',
-  audio = 'audio',
-  video = 'video',
-  custom = 'custom',
-}
+import type { FileUpload } from '@/app/components/base/features/types'
+import { SupportUploadFileTypes } from '@/app/components/workflow/types'
+import cn from '@/utils/classnames'
 
 type FileListProps = {
   className?: string
-  files: any
+  files: FileEntity[]
   onRemove?: (fileId: string) => void
   onReUpload?: (fileId: string) => void
   showDeleteAction?: boolean
@@ -33,7 +28,7 @@ export const FileList = ({
   return (
     <div className={cn('flex flex-wrap gap-2', className)}>
       {
-        files.map((file: any) => {
+        files.map((file) => {
           if (file.supportFileType === SupportUploadFileTypes.image) {
             return (
               <FileImageItem
@@ -66,7 +61,7 @@ export const FileList = ({
 }
 
 type FileListInChatInputProps = {
-  fileConfig: any
+  fileConfig: FileUpload
 }
 export const FileListInChatInput = ({
   fileConfig,

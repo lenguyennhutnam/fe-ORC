@@ -5,7 +5,7 @@ import { RiCloseLine } from '@remixicon/react'
 import { useContext } from 'use-context-selector'
 import Button from '@/app/components/base/button'
 import Input from '@/app/components/base/input'
-import Tooltip from '@/app/components/base/tooltipNew'
+import Tooltip from '@/app/components/base/tooltip'
 import { ToastContext } from '@/app/components/base/toast'
 import { useStore } from '@/app/components/workflow/store'
 import type { EnvironmentVariable } from '@/app/components/workflow/types'
@@ -46,9 +46,9 @@ const VariableModal = ({
     if (!checkVariableName(name))
       return
     if (!value)
-      return notify({ type: 'error', message: 'value can not be empty' })
+      return Toast.notify({ type: 'error', message: 'value can not be empty' })
     if (!env && envList.some(env => env.name === name))
-      return notify({ type: 'error', message: 'name is existed' })
+      return Toast.notify({ type: 'error', message: 'name is existed' })
     onSave({
       id: env ? env.id : uuid4(),
       value_type: type,

@@ -51,7 +51,7 @@ const Operation = ({
     try {
       await deleteMemberOrCancelInvitation({ url: `/workspaces/current/members/${member.id}` })
       onOperate()
-      notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
+      Toast.notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
     }
     catch (e) {
 
@@ -64,7 +64,7 @@ const Operation = ({
         body: { role },
       })
       onOperate()
-      notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
+      Toast.notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
     }
     catch (e) {
 

@@ -14,9 +14,10 @@ import {
 import type { FileEntity } from '../types'
 import FileInput from '../file-input'
 import { useFile } from '../hooks'
-import Button from '../../button/newBtn'
 import FileItem from './file-item'
-import cn from '@/config/classnames'
+import Button from '@/app/components/base/button'
+import cn from '@/utils/classnames'
+import type { FileUpload } from '@/app/components/base/features/types'
 import { TransferMethod } from '@/types/app'
 
 type Option = {
@@ -25,7 +26,7 @@ type Option = {
   icon: any
 }
 type FileUploaderInAttachmentProps = {
-  fileConfig: any
+  fileConfig: FileUpload
 }
 const FileUploaderInAttachment = ({
   fileConfig,
@@ -54,10 +55,7 @@ const FileUploaderInAttachment = ({
       <Button
         key={option.value}
         variant='tertiary'
-        className={cn(
-          'relative grow flex items-center justify-center w-full py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-200',
-          open && 'bg-components-button-tertiary-bg-hover',
-        )}
+        className={cn('relative grow', open && 'bg-components-button-tertiary-bg-hover')}
         disabled={!!(fileConfig.number_limits && files.length >= fileConfig.number_limits)}
       >
         {option.icon}
@@ -115,7 +113,7 @@ const FileUploaderInAttachment = ({
 type FileUploaderInAttachmentWrapperProps = {
   value?: FileEntity[]
   onChange: (files: FileEntity[]) => void
-  fileConfig: any
+  fileConfig: FileUpload
 }
 const FileUploaderInAttachmentWrapper = ({
   value,

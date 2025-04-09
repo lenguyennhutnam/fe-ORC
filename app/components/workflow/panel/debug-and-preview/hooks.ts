@@ -194,7 +194,7 @@ export const useChat = (
     }: SendCallback,
   ) => {
     if (isRespondingRef.current) {
-      notify({ type: 'info', message: t('appDebug.errorMessage.waitForResponse') })
+      Toast.notify({ type: 'info', message: t('appDebug.errorMessage.waitForResponse') })
       return false
     }
 
@@ -311,7 +311,7 @@ export const useChat = (
               )
               setSuggestQuestions(data)
             }
-            // eslint-disable-next-line unused-imports/no-unused-vars
+
             catch (error) {
               setSuggestQuestions([])
             }

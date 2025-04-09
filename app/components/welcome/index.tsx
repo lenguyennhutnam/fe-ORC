@@ -5,13 +5,13 @@ import { useTranslation } from 'react-i18next'
 import { RiPlayLargeLine } from '@remixicon/react'
 import TemplateVarPanel, { PanelTitle, VarOpBtnGroup } from '../value-panel'
 import { FileUploaderInAttachmentWrapper } from '../base/file-uploader'
-import { useChatWithHistoryContext } from '../base/context/context'
-import Button from '../base/button/newBtn'
+import Button from '../base/button'
 import TextGenerationImageUploader from '../base/image-uploader/text-generation-image-uploader'
 import { getProcessedFiles } from '../base/file-uploader/utils'
 import Textarea from '../base/textarea'
 import Input from '../base/input'
 import { AppInfoComp, ChatBtn, EditBtn, FootLogo, PromptTemplate } from './massive-component'
+import { useChatWithHistoryContext } from '@/app/components/chat/chat-with-history/context'
 import type { AppInfo, PromptConfig, VisionSettings } from '@/types/app'
 import Toast from '@/app/components/base/toast'
 import Select from '@/app/components/base/select'
@@ -143,7 +143,7 @@ const Welcome: FC<any> = ({
 
   const { notify } = Toast
   const logError = (message: string) => {
-    notify({ type: 'error', message, duration: 3000 })
+    Toast.notify({ type: 'error', message, duration: 3000 })
   }
 
   const renderHeader = () => {

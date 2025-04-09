@@ -217,7 +217,7 @@ const ModelLoadBalancingEntryModal: FC<ModelModalProps> = ({
         entry?.id,
       )
       if (res.status === ValidatedStatus.Success) {
-        // notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
+        // Toast.notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
         const { __model_type, __model_name, name, ...credentials } = value
         onSave({
           ...(entry || {}),
@@ -227,7 +227,7 @@ const ModelLoadBalancingEntryModal: FC<ModelModalProps> = ({
         //   onCancel()
       }
       else {
-        notify({ type: 'error', message: res.message || '' })
+        Toast.notify({ type: 'error', message: res.message || '' })
       }
     }
     finally {

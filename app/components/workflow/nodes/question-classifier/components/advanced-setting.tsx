@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import MemoryConfig from '../../_base/components/memory-config'
 import Editor from '@/app/components/workflow/nodes/_base/components/prompt/editor'
 import type { Memory, Node, NodeOutPutVar } from '@/app/components/workflow/types'
-import Tooltip from '@/app/components/base/tooltipNew'
+import Tooltip from '@/app/components/base/tooltip'
 const i18nPrefix = 'workflow.nodes.questionClassifiers'
 
 type Props = {

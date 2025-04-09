@@ -44,7 +44,7 @@ const EndpointCard = ({
       await handleChange()
     },
     onError: () => {
-      Toast.notify({ type: 'error', message: t('common.actionMsg.modifiedUnsuccessfully') })
+      Toast.Toast.notify({ type: 'error', message: t('common.actionMsg.modifiedUnsuccessfully') })
       setActive(false)
     },
   })
@@ -54,7 +54,7 @@ const EndpointCard = ({
       hideDisableConfirm()
     },
     onError: () => {
-      Toast.notify({ type: 'error', message: t('common.actionMsg.modifiedUnsuccessfully') })
+      Toast.Toast.notify({ type: 'error', message: t('common.actionMsg.modifiedUnsuccessfully') })
       setActive(false)
     },
   })
@@ -80,7 +80,7 @@ const EndpointCard = ({
       hideDeleteConfirm()
     },
     onError: () => {
-      Toast.notify({ type: 'error', message: t('common.actionMsg.modifiedUnsuccessfully') })
+      Toast.Toast.notify({ type: 'error', message: t('common.actionMsg.modifiedUnsuccessfully') })
     },
   })
 
@@ -105,7 +105,7 @@ const EndpointCard = ({
       hideEndpointModalConfirm()
     },
     onError: () => {
-      Toast.notify({ type: 'error', message: t('common.actionMsg.modifiedUnsuccessfully') })
+      Toast.Toast.notify({ type: 'error', message: t('common.actionMsg.modifiedUnsuccessfully') })
     },
   })
   const handleUpdate = (state: any) => updateEndpoint({

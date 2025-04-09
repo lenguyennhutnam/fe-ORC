@@ -1,29 +1,29 @@
-import { PortalToFollowElem, PortalToFollowElemContent, PortalToFollowElemTrigger } from '@/app/components/base/portal-to-follow-elem'
 import type { ReactNode } from 'react'
 import { memo, useEffect, useMemo, useRef, useState } from 'react'
-import type { Strategy } from './agent-strategy'
-import classNames from '@/utils/classnames'
 import { RiArrowDownSLine, RiErrorWarningFill } from '@remixicon/react'
-import Tooltip from '@/app/components/base/tooltipNew'
 import Link from 'next/link'
-import { InstallPluginButton } from './install-plugin-button'
-import ViewTypeSelect, { ViewType } from '../../../block-selector/view-type-select'
-import SearchInput from '@/app/components/base/search-input'
-import Tools from '../../../block-selector/tools'
 import { useTranslation } from 'react-i18next'
+import ViewTypeSelect, { ViewType } from '../../../block-selector/view-type-select'
+import Tools from '../../../block-selector/tools'
+import type { ToolWithProvider } from '../../../types'
+import { useStrategyInfo } from '../../agent/use-config'
+import type { Strategy } from './agent-strategy'
+import { PortalToFollowElem, PortalToFollowElemContent, PortalToFollowElemTrigger } from '@/app/components/base/portal-to-follow-elem'
+import classNames from '@/utils/classnames'
+import Tooltip from '@/app/components/base/tooltip'
+import { InstallPluginButton } from './install-plugin-button'
+import SearchInput from '@/app/components/base/search-input'
 import { useStrategyProviders } from '@/service/use-strategy'
 import { PluginType, type StrategyPluginDetail } from '@/app/components/plugins/types'
-import type { ToolWithProvider } from '../../../types'
 import { CollectionType } from '@/app/components/tools/types'
 import useGetIcon from '@/app/components/plugins/install-plugin/base/use-get-icon'
-import { useStrategyInfo } from '../../agent/use-config'
 import { SwitchPluginVersion } from './switch-plugin-version'
 import PluginList from '@/app/components/workflow/block-selector/market-place-plugin/list'
 import { useMarketplacePlugins } from '@/app/components/plugins/marketplace/hooks'
-import { ToolTipContent } from '@/app/components/base/tooltipNew/content'
+import { ToolTipContent } from '@/app/components/base/tooltip/content'
 
 const NotFoundWarn = (props: {
-  title: ReactNode,
+  title: ReactNode
   description: ReactNode
 }) => {
   const { title, description } = props
@@ -83,8 +83,8 @@ function formatStrategy(input: StrategyPluginDetail[], getIcon: (i: string) => s
 }
 
 export type AgentStrategySelectorProps = {
-  value?: Strategy,
-  onChange: (value?: Strategy) => void,
+  value?: Strategy
+  onChange: (value?: Strategy) => void
 }
 
 export const AgentStrategySelector = memo((props: AgentStrategySelectorProps) => {
@@ -96,7 +96,8 @@ export const AgentStrategySelector = memo((props: AgentStrategySelectorProps) =>
   const { getIconUrl } = useGetIcon()
   const list = stra.data ? formatStrategy(stra.data, getIconUrl) : undefined
   const filteredTools = useMemo(() => {
-    if (!list) return []
+    if (!list)
+      return []
     return list.filter(tool => tool.name.toLowerCase().includes(query.toLowerCase()))
   }, [query, list])
   const { strategyStatus, refetch: refetchStrategyInfo } = useStrategyInfo(

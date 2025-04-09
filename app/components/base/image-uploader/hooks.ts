@@ -4,8 +4,7 @@ import { useParams } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
 import { imageUpload } from './utils'
 import { useToastContext } from '@/app/components/base/toast'
-import { TransferMethod } from '@/types/app'
-import { ALLOW_FILE_EXTENSIONS } from '@/config'
+import { ALLOW_FILE_EXTENSIONS, TransferMethod } from '@/types/app'
 import type { ImageFile, VisionSettings } from '@/types/app'
 
 export const useImageFiles = () => {
@@ -83,7 +82,7 @@ export const useImageFiles = () => {
           setFiles(newFiles)
         },
         onErrorCallback: () => {
-          notify({ type: 'error', message: t('common.imageUploader.uploadFromComputerUploadError') })
+          Toast.notify({ type: 'error', message: t('common.imageUploader.uploadFromComputerUploadError') })
           const newFiles = [...files.slice(0, index), { ...currentImageFile, progress: -1 }, ...files.slice(index + 1)]
           filesRef.current = newFiles
           setFiles(newFiles)
@@ -133,7 +132,7 @@ export const useLocalFileUploader = ({ limit, disabled = false, onUpload }: useL
       return
 
     if (limit && file.size > limit * 1024 * 1024) {
-      notify({ type: 'error', message: t('common.imageUploader.uploadFromComputerLimit', { size: limit }) })
+      Toast.notify({ type: 'error', message: t('common.imageUploader.uploadFromComputerLimit', { size: limit }) })
       return
     }
 
@@ -141,7 +140,6 @@ export const useLocalFileUploader = ({ limit, disabled = false, onUpload }: useL
     reader.addEventListener(
       'load',
       () => {
-        console.log('loading')
         const imageFile = {
           type: TransferMethod.local_file,
           _id: `${Date.now()}`,
@@ -161,7 +159,7 @@ export const useLocalFileUploader = ({ limit, disabled = false, onUpload }: useL
             onUpload({ ...imageFile, fileId: res.id, progress: 100 })
           },
           onErrorCallback: () => {
-            notify({ type: 'error', message: t('common.imageUploader.uploadFromComputerUploadError') })
+            Toast.notify({ type: 'error', message: t('common.imageUploader.uploadFromComputerUploadError') })
             onUpload({ ...imageFile, progress: -1 })
           },
         }, !!params.token)
@@ -171,7 +169,7 @@ export const useLocalFileUploader = ({ limit, disabled = false, onUpload }: useL
     reader.addEventListener(
       'error',
       () => {
-        notify({ type: 'error', message: t('common.imageUploader.uploadFromComputerReadError') })
+        Toast.notify({ type: 'error', message: t('common.imageUploader.uploadFromComputerReadError') })
       },
       false,
     )

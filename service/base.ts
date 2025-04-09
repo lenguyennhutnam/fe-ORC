@@ -410,7 +410,7 @@ export const ssePost = (
         }
         else {
           res.json().then((data) => {
-            Toast.notify({ type: 'error', message: data.message || 'Server Error' })
+            Toast.Toast.notify({ type: 'error', message: data.message || 'Server Error' })
           })
           onError?.('Server Error')
         }
@@ -421,7 +421,7 @@ export const ssePost = (
           onError?.(moreInfo.errorMessage, moreInfo.errorCode)
           // TypeError: Cannot assign to read only property ... will happen in page leave, so it should be ignored.
           if (moreInfo.errorMessage !== 'AbortError: The user aborted a request.' && !moreInfo.errorMessage.includes('TypeError: Cannot assign to read only property'))
-            Toast.notify({ type: 'error', message: moreInfo.errorMessage })
+            Toast.Toast.notify({ type: 'error', message: moreInfo.errorMessage })
           return
         }
         onData?.(str, isFirstMessage, moreInfo)
@@ -452,7 +452,7 @@ export const ssePost = (
       )
     }).catch((e) => {
       if (e.toString() !== 'AbortError: The user aborted a request.' && !e.toString().errorMessage.includes('TypeError: Cannot assign to read only property'))
-        Toast.notify({ type: 'error', message: e })
+        Toast.Toast.notify({ type: 'error', message: e })
       onError?.(e)
     })
 }
@@ -460,6 +460,7 @@ export const ssePost = (
 // base request
 export const request = async<T>(url: string, options = {}, otherOptions?: IOtherOptions) => {
   try {
+    console.log(url)
     const otherOptionsForBaseFetch = otherOptions || {}
     const [err, resp] = await asyncRunSafe<T>(baseFetch(url, options, otherOptionsForBaseFetch))
     if (err === null)
@@ -495,7 +496,7 @@ export const request = async<T>(url: string, options = {}, otherOptions?: IOther
         return Promise.reject(err)
       }
       if (code === 'init_validate_failed' && !silent) {
-        Toast.notify({ type: 'error', message, duration: 4000 })
+        Toast.Toast.notify({ type: 'error', message, duration: 4000 })
         return Promise.reject(err)
       }
       if (code === 'not_init_validated') {
@@ -516,7 +517,7 @@ export const request = async<T>(url: string, options = {}, otherOptions?: IOther
         return Promise.reject(err)
       }
       if (!silent) {
-        Toast.notify({ type: 'error', message })
+        Toast.Toast.notify({ type: 'error', message })
         return Promise.reject(err)
       }
       globalThis.location.href = loginUrl

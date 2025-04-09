@@ -131,7 +131,7 @@ const ConfigModal: FC<IConfigModalProps> = ({
     // }
 
     if (!tempPayload.label) {
-      Toast.notify({ type: 'error', message: t('appDebug.variableConfig.errorMsg.labelNameRequired') })
+      Toast.Toast.notify({ type: 'error', message: t('appDebug.variableConfig.errorMsg.labelNameRequired') })
       return
     }
     if (isStringInput || type === InputVarType.number) {
@@ -139,7 +139,7 @@ const ConfigModal: FC<IConfigModalProps> = ({
     }
     else if (type === InputVarType.select) {
       if (options?.length === 0) {
-        Toast.notify({ type: 'error', message: t('appDebug.variableConfig.errorMsg.atLeastOneOption') })
+        Toast.Toast.notify({ type: 'error', message: t('appDebug.variableConfig.errorMsg.atLeastOneOption') })
         return
       }
       const obj: Record<string, boolean> = {}
@@ -152,7 +152,7 @@ const ConfigModal: FC<IConfigModalProps> = ({
         obj[o] = true
       })
       if (hasRepeatedItem) {
-        Toast.notify({ type: 'error', message: t('appDebug.variableConfig.errorMsg.optionRepeat') })
+        Toast.Toast.notify({ type: 'error', message: t('appDebug.variableConfig.errorMsg.optionRepeat') })
         return
       }
       onConfirm(tempPayload, moreInfo)
@@ -160,12 +160,12 @@ const ConfigModal: FC<IConfigModalProps> = ({
     else if ([InputVarType.singleFile, InputVarType.multiFiles].includes(type)) {
       if (tempPayload.allowed_file_types?.length === 0) {
         const errorMessages = t('workflow.errorMsg.fieldRequired', { field: t('appDebug.variableConfig.file.supportFileTypes') })
-        Toast.notify({ type: 'error', message: errorMessages })
+        Toast.Toast.notify({ type: 'error', message: errorMessages })
         return
       }
       if (tempPayload.allowed_file_types?.includes(SupportUploadFileTypes.custom) && !tempPayload.allowed_file_extensions?.length) {
         const errorMessages = t('workflow.errorMsg.fieldRequired', { field: t('appDebug.variableConfig.file.custom.name') })
-        Toast.notify({ type: 'error', message: errorMessages })
+        Toast.Toast.notify({ type: 'error', message: errorMessages })
         return
       }
       onConfirm(tempPayload, moreInfo)

@@ -130,7 +130,7 @@ const WorkflowPreview = () => {
                       copy(content)
                     else
                       copy(JSON.stringify(content))
-                    Toast.notify({ type: 'success', message: t('common.actionMsg.copySuccessfully') })
+                    Toast.Toast.notify({ type: 'success', message: t('common.actionMsg.copySuccessfully') })
                   }}>
                   <RiClipboardLine className='h-3.5 w-3.5' />
                   <div>{t('common.operation.copy')}</div>

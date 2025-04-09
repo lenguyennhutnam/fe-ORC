@@ -124,7 +124,7 @@ const Operation: FC<OperationProps> = ({
             )}
             <ActionButton onClick={() => {
               copy(content)
-              Toast.notify({ type: 'success', message: t('common.actionMsg.copySuccessfully') })
+              Toast.Toast.notify({ type: 'success', message: t('common.actionMsg.copySuccessfully') })
             }}>
               <RiClipboardLine className='h-4 w-4' />
             </ActionButton>

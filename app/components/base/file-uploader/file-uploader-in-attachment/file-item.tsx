@@ -16,13 +16,13 @@ import {
 } from '../utils'
 import FileImageRender from '../file-image-render'
 import type { FileEntity } from '../types'
-import { ReplayLine } from '../../iconsNew/src/vender/other'
-import ImagePreview from '../../image-uploader/image-preview'
-import { SupportUploadFileTypes } from '../file-uploader-in-chat-input/file-list'
 import ActionButton from '@/app/components/base/action-button'
 import ProgressCircle from '@/app/components/base/progress-bar/progress-circle'
 import { formatFileSize } from '@/utils/format'
-import cn from '@/config/classnames'
+import cn from '@/utils/classnames'
+import { ReplayLine } from '@/app/components/base/icons/src/vender/other'
+import { SupportUploadFileTypes } from '@/app/components/workflow/types'
+import ImagePreview from '@/app/components/base/image-uploader/image-preview'
 
 type FileInAttachmentItemProps = {
   file: FileEntity

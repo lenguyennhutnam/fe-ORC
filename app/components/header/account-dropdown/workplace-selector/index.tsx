@@ -8,7 +8,7 @@ import PlanBadge from '@/app/components/header/plan-badge'
 import { switchWorkspace } from '@/service/common'
 import { useWorkspacesContext } from '@/context/workspace-context'
 import { ToastContext } from '@/app/components/base/toast'
-import type { Plan } from '@/app/components/billing/type'
+// import type { Plan } from '@/app/components/billing/type'
 
 const WorkplaceSelector = () => {
   const { t } = useTranslation()
@@ -21,11 +21,11 @@ const WorkplaceSelector = () => {
       if (currentWorkspace?.id === tenant_id)
         return
       await switchWorkspace({ url: '/workspaces/switch', body: { tenant_id } })
-      notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
+      Toast.notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
       location.assign(`${location.origin}`)
     }
     catch (e) {
-      notify({ type: 'error', message: t('common.provider.saveFailed') })
+      Toast.notify({ type: 'error', message: t('common.provider.saveFailed') })
     }
   }
 

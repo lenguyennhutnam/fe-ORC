@@ -47,7 +47,7 @@ const CredentialPanel: FC<CredentialPanelProps> = ({
       },
     })
     if (res.result === 'success') {
-      notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
+      Toast.notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
       updateModelProviders()
 
       configurateMethods.forEach((method) => {

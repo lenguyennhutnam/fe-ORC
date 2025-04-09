@@ -6,9 +6,9 @@ import { useTranslation } from 'react-i18next'
 import {
   PencilIcon,
 } from '@heroicons/react/24/solid'
-import { useChatWithHistoryContext } from '../base/context/context'
-import Button from '../base/button/newBtn'
+import Button from '../base/button'
 import s from './style.module.css'
+import { useChatWithHistoryContext } from '@/app/components/chat/chat-with-history/context'
 import type { AppInfo } from '@/types/app'
 
 export const AppInfoComp: FC<{ siteInfo: AppInfo }> = ({ siteInfo }) => {

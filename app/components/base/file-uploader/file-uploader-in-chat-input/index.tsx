@@ -7,11 +7,12 @@ import {
 } from '@remixicon/react'
 import FileFromLinkOrLocal from '../file-from-link-or-local'
 import ActionButton from '@/app/components/base/action-button'
-import cn from '@/config/classnames'
+import cn from '@/utils/classnames'
+import type { FileUpload } from '@/app/components/base/features/types'
 import { TransferMethod } from '@/types/app'
 
 type FileUploaderInChatInputProps = {
-  fileConfig: any
+  fileConfig: FileUpload
 }
 const FileUploaderInChatInput = ({
   fileConfig,

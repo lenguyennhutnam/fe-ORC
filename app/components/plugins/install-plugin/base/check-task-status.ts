@@ -1,4 +1,4 @@
-import { checkTaskStatus as fetchCheckTaskStatus } from '@/service/plugins'
+// import { checkTaskStatus as fetchCheckTaskStatus } from '@/service/plugins'
 import type { PluginStatus } from '../../types'
 import { TaskStatus } from '../../types'
 import { sleep } from '@/utils'

@@ -2,10 +2,10 @@ import type { ChangeEvent, FC } from 'react'
 import { useState } from 'react'
 import { useLocalFileUploader } from './hooks'
 import type { ImageFile } from '@/types/app'
-import { ALLOW_FILE_EXTENSIONS } from '@/config'
+import { ALLOW_FILE_EXTENSIONS } from '@/types/app'
 
 type UploaderProps = {
-  children: (hovering: boolean) => any
+  children: (hovering: boolean) => React.JSX.Element
   onUpload: (imageFile: ImageFile) => void
   closePopover?: () => void
   limit?: number

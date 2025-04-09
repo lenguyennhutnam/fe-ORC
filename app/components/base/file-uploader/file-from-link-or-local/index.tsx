@@ -8,14 +8,14 @@ import FileInput from '../file-input'
 import { useFile } from '../hooks'
 import { useStore } from '../store'
 import { FILE_URL_REGEX } from '../constants'
-import Button from '../../button/newBtn'
 import {
   PortalToFollowElem,
   PortalToFollowElemContent,
   PortalToFollowElemTrigger,
 } from '@/app/components/base/portal-to-follow-elem'
-import type { FileUpload } from '@/config/types'
-import cn from '@/config/classnames'
+import Button from '@/app/components/base/button'
+import type { FileUpload } from '@/app/components/base/features/types'
+import cn from '@/utils/classnames'
 
 type FileFromLinkOrLocalProps = {
   showFromLink?: boolean

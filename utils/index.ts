@@ -1,6 +1,6 @@
 import { escape } from 'lodash-es'
 import { type ValueSelector } from '@/config/types'
-import { SupportUploadFileTypes } from '@/app/components/base/file-uploader/file-uploader-in-chat-input/file-list'
+import { SupportUploadFileTypes } from '@/app/components/workflow/types'
 import { post } from '@/service/base'
 
 export const sleep = (ms: number) => {

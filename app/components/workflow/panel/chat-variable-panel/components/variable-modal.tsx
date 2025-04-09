@@ -219,11 +219,11 @@ const ChatVariableModal = ({
     if (!checkVariableName(name))
       return
     if (!chatVar && varList.some(chatVar => chatVar.name === name))
-      return notify({ type: 'error', message: 'name is existed' })
+      return Toast.notify({ type: 'error', message: 'name is existed' })
     // if (type !== ChatVarType.Object && !value)
-    //   return notify({ type: 'error', message: 'value can not be empty' })
+    //   return Toast.notify({ type: 'error', message: 'value can not be empty' })
     if (type === ChatVarType.Object && objectValue.some(item => !item.key && !!item.value))
-      return notify({ type: 'error', message: 'object key can not be empty' })
+      return Toast.notify({ type: 'error', message: 'object key can not be empty' })
 
     onSave({
       id: chatVar ? chatVar.id : uuid4(),

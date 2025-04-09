@@ -14,7 +14,7 @@ import type {
   CommonNodeType,
   Node,
 } from '@/app/components/workflow/types'
-import Tooltip from '@/app/components/base/tooltipNew'
+import Tooltip from '@/app/components/base/tooltip'
 
 type ErrorHandleProps = Pick<Node, 'id' | 'data'>
 const ErrorHandle = ({

@@ -2,33 +2,29 @@
 
 import { createRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import useSWR from 'swr'
-import { createContext, useContext, useContextSelector } from 'use-context-selector'
+import { createContext, useContext } from 'use-context-selector'
 import type { FC, ReactNode } from 'react'
-import { fetchAppList } from '@/service/apps'
-import Loading from '@/app/components/base/loading'
-import { fetchCurrentWorkspace, fetchLanggeniusVersion, fetchUserProfile, getSystemFeatures } from '@/service/common'
-import type { App } from '@/types/app'
-import type { ICurrentWorkspace, LangGeniusVersionResponse, UserProfileResponse } from '@/models/common'
-import MaintenanceNotice from '@/app/components/header/maintenance-notice'
-import type { SystemFeatures } from '@/types/feature'
-import { defaultSystemFeatures } from '@/types/feature'
 import { noop } from 'lodash-es'
+// import Loading from '@/app/components/base/loading'
+import { fetchCurrentWorkspace, fetchLanggeniusVersion, fetchUserProfile } from '@/service/common'
+import MaintenanceNotice from '@/app/components/header/maintenance-notice'
+// import { defaultSystemFeatures } from '@/types/feature'
 
 export type AppContextValue = {
-  apps: App[]
-  systemFeatures: SystemFeatures
+  apps: any[]
+  systemFeatures: any
   mutateApps: VoidFunction
-  userProfile: UserProfileResponse
+  userProfile: any
   mutateUserProfile: VoidFunction
-  currentWorkspace: ICurrentWorkspace
+  currentWorkspace: any
   isCurrentWorkspaceManager: boolean
   isCurrentWorkspaceOwner: boolean
   isCurrentWorkspaceEditor: boolean
   isCurrentWorkspaceDatasetOperator: boolean
   mutateCurrentWorkspace: VoidFunction
   pageContainerRef: React.RefObject<HTMLDivElement>
-  langeniusVersionInfo: LangGeniusVersionResponse
-  useSelector: typeof useSelector
+  langeniusVersionInfo: any
+  // useSelector: typeof useSelector
   isLoadingCurrentWorkspace: boolean
 }
 
@@ -42,7 +38,7 @@ const initialLangeniusVersionInfo = {
   can_auto_update: false,
 }
 
-const initialWorkspaceInfo: ICurrentWorkspace = {
+const initialWorkspaceInfo: any = {
   id: '',
   name: '',
   plan: '',
@@ -52,8 +48,8 @@ const initialWorkspaceInfo: ICurrentWorkspace = {
   providers: [],
 }
 
-const AppContext = createContext<AppContextValue>({
-  systemFeatures: defaultSystemFeatures,
+const AppContext = createContext({
+  // systemFeatures: defaultSystemFeatures,
   apps: [],
   mutateApps: noop,
   userProfile: {
@@ -73,13 +69,13 @@ const AppContext = createContext<AppContextValue>({
   mutateCurrentWorkspace: noop,
   pageContainerRef: createRef(),
   langeniusVersionInfo: initialLangeniusVersionInfo,
-  useSelector,
+  // useSelector,
   isLoadingCurrentWorkspace: false,
 })
 
-export function useSelector<T>(selector: (value: AppContextValue) => T): T {
-  return useContextSelector(AppContext, selector)
-}
+// export function useSelector<T>(selector: (value: AppContextValue) => T): T {
+//   return useContextSelector(AppContext, selector)
+// }
 
 export type AppContextProviderProps = {
   children: ReactNode
@@ -88,17 +84,17 @@ export type AppContextProviderProps = {
 export const AppContextProvider: FC<AppContextProviderProps> = ({ children }) => {
   const pageContainerRef = useRef<HTMLDivElement>(null)
 
-  const { data: appList, mutate: mutateApps } = useSWR({ url: '/apps', params: { page: 1, limit: 30, name: '' } }, fetchAppList)
+  // const { data: appList, mutate: mutateApps } = useSWR({ url: '/apps', params: { page: 1, limit: 30, name: '' } }, fetchAppList)
   const { data: userProfileResponse, mutate: mutateUserProfile } = useSWR({ url: '/account/profile', params: {} }, fetchUserProfile)
   const { data: currentWorkspaceResponse, mutate: mutateCurrentWorkspace, isLoading: isLoadingCurrentWorkspace } = useSWR({ url: '/workspaces/current', params: {} }, fetchCurrentWorkspace)
 
-  const { data: systemFeatures } = useSWR({ url: '/console/system-features' }, getSystemFeatures, {
-    fallbackData: defaultSystemFeatures,
-  })
+  // const { data: systemFeatures } = useSWR({ url: '/console/system-features' }, getSystemFeatures, {
+  //   fallbackData: defaultSystemFeatures,
+  // })
 
-  const [userProfile, setUserProfile] = useState<UserProfileResponse>()
-  const [langeniusVersionInfo, setLangeniusVersionInfo] = useState<LangGeniusVersionResponse>(initialLangeniusVersionInfo)
-  const [currentWorkspace, setCurrentWorkspace] = useState<ICurrentWorkspace>(initialWorkspaceInfo)
+  const [userProfile, setUserProfile] = useState<any>()
+  const [langeniusVersionInfo, setLangeniusVersionInfo] = useState<any>(initialLangeniusVersionInfo)
+  const [currentWorkspace, setCurrentWorkspace] = useState<any>(initialWorkspaceInfo)
   const isCurrentWorkspaceManager = useMemo(() => ['owner', 'admin'].includes(currentWorkspace.role), [currentWorkspace.role])
   const isCurrentWorkspaceOwner = useMemo(() => currentWorkspace.role === 'owner', [currentWorkspace.role])
   const isCurrentWorkspaceEditor = useMemo(() => ['owner', 'admin', 'editor'].includes(currentWorkspace.role), [currentWorkspace.role])
@@ -123,19 +119,19 @@ export const AppContextProvider: FC<AppContextProviderProps> = ({ children }) =>
       setCurrentWorkspace(currentWorkspaceResponse)
   }, [currentWorkspaceResponse])
 
-  if (!appList || !userProfile)
-    return <Loading type='app' />
+  // if (!appList || !userProfile)
+  //   return <Loading type='app' />
 
   return (
     <AppContext.Provider value={{
-      apps: appList.data,
-      systemFeatures: { ...defaultSystemFeatures, ...systemFeatures },
-      mutateApps,
-      userProfile,
+      // apps: appList.data,
+      // systemFeatures: { ...defaultSystemFeatures, ...systemFeatures },
+      // mutateApps,
+      // userProfile,
       mutateUserProfile,
       pageContainerRef,
       langeniusVersionInfo,
-      useSelector,
+      // useSelector,
       currentWorkspace,
       isCurrentWorkspaceManager,
       isCurrentWorkspaceOwner,

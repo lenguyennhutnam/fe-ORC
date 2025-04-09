@@ -39,7 +39,7 @@ const ObjectValueItem: FC<Props> = ({
     return (e: React.ChangeEvent<HTMLInputElement>) => {
       const newList = produce(list, (draft: any[]) => {
         if (!/^[a-zA-Z0-9_]+$/.test(e.target.value))
-          return notify({ type: 'error', message: 'key is can only contain letters, numbers and underscores' })
+          return Toast.notify({ type: 'error', message: 'key is can only contain letters, numbers and underscores' })
         draft[index].key = e.target.value
       })
       onChange(newList)

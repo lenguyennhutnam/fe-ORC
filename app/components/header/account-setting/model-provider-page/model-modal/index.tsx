@@ -237,7 +237,7 @@ const ModelModal: FC<ModelModalProps> = ({
         },
       )
       if (res.result === 'success') {
-        notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
+        Toast.notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
         mutate()
         onSave()
         onCancel()
@@ -258,7 +258,7 @@ const ModelModal: FC<ModelModalProps> = ({
         value,
       )
       if (res.result === 'success') {
-        notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
+        Toast.notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
         mutate()
         onSave()
         onCancel()

@@ -1,9 +1,9 @@
 import mime from 'mime'
 import { FileAppearanceTypeEnum } from './types'
 import type { FileEntity } from './types'
-import { SupportUploadFileTypes } from './file-uploader-in-chat-input/file-list'
 import { upload } from '@/service/base'
-import { FILE_EXTS } from '@/utils'
+import { FILE_EXTS } from '@/app/components/base/prompt-editor/constants'
+import { SupportUploadFileTypes } from '@/app/components/workflow/types'
 import type { FileResponse } from '@/types/workflow'
 import { TransferMethod } from '@/types/app'
 
@@ -28,7 +28,7 @@ export const fileUpload: FileUpload = ({
       onProgressCallback(percent)
     }
   }
-  console.log(`file here ${url}`)
+
   upload({
     xhr: new XMLHttpRequest(),
     data: formData,

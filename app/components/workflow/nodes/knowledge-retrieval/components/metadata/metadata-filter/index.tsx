@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import MetadataTrigger from '../metadata-trigger'
 import MetadataFilterSelector from './metadata-filter-selector'
 import Collapse from '@/app/components/workflow/nodes/_base/components/collapse'
-import Tooltip from '@/app/components/base/tooltipNew'
+import Tooltip from '@/app/components/base/tooltip'
 import type { MetadataShape } from '@/app/components/workflow/nodes/knowledge-retrieval/types'
 import { MetadataFilteringModeEnum } from '@/app/components/workflow/nodes/knowledge-retrieval/types'
 import ModelParameterModal from '@/app/components/header/account-setting/model-provider-page/model-parameter-modal'
@@ -85,8 +85,8 @@ const MetadataFilter = ({
                   provider={metadataModelConfig?.provider || ''}
                   completionParams={metadataModelConfig?.completion_params || { temperature: 0.7 }}
                   modelId={metadataModelConfig?.name || ''}
-                  setModel={handleMetadataModelChange || (() => {})}
-                  onCompletionParamsChange={handleMetadataCompletionParamsChange || (() => {})}
+                  setModel={handleMetadataModelChange || (() => { })}
+                  onCompletionParamsChange={handleMetadataCompletionParamsChange || (() => { })}
                   hideDebugWithMultipleModel
                   debugWithMultipleModel={false}
                 />

@@ -1,7 +1,7 @@
 'use client'
 
 import Badge from '@/app/components/base/badge'
-import Tooltip from '@/app/components/base/tooltipNew'
+import Tooltip from '@/app/components/base/tooltip'
 import PluginVersionPicker from '@/app/components/plugins/update-plugin/plugin-version-picker'
 import { RiArrowLeftRightLine, RiExternalLinkLine } from '@remixicon/react'
 import type { ReactNode } from 'react'

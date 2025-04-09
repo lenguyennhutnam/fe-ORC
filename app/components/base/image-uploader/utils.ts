@@ -21,7 +21,7 @@ export const imageUpload: ImageUpload = ({
       onProgressCallback(percent)
     }
   }
-  console.log('img here')
+
   upload({
     xhr: new XMLHttpRequest(),
     data: formData,

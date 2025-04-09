@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react'
 import React from 'react'
 import { type VariantProps, cva } from 'class-variance-authority'
-import classNames from '@/config/classnames'
+import classNames from '@/utils/classnames'
 
 enum ActionButtonState {
   Destructive = 'destructive',

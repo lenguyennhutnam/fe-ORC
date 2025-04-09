@@ -5,16 +5,14 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import produce, { setAutoFreeze } from 'immer'
 import { useBoolean, useGetState } from 'ahooks'
-import { useChatWithHistoryContext } from './base/context/context'
+import ChatWithHistory from '@/app/components/base/chat/chat-with-history/index'
+import { useChatWithHistoryContext } from '@/app/components/chat/chat-with-history/context'
 import useConversation from '@/hooks/use-conversation'
 import Toast from '@/app/components/base/toast'
 import Sidebar from '@/app/components/sidebar'
-import ConfigSence from '@/app/components/config-scence'
-import Header from '@/app/components/header'
-import { fetchAppParams, fetchChatList, fetchConversations, generationConversationName, sendChatMessage, updateFeedback } from '@/service'
-import type { ChatItem, ConversationItem, Feedbacktype, PromptConfig, VisionFile, VisionSettings } from '@/types/app'
+import { fetchAppParams, fetchChatList, fetchConversations, generationConversationName, sendChatMessage } from '@/service'
+import type { ChatItem, ConversationItem, PromptConfig, VisionFile, VisionSettings } from '@/types/app'
 import { Resolution, TransferMethod, WorkflowRunningStatus } from '@/types/app'
-import Chat from '@/app/components/chat'
 import { setLocaleOnClient } from '@/i18n/client'
 import useBreakpoints from '@/hooks/use-breakpoints'
 import Loading from '@/app/components/base/loading'
@@ -244,6 +242,8 @@ const Main: FC<IMainProps> = () => {
     (async () => {
       try {
         const [conversationData, appParams] = await Promise.all([fetchConversations(), fetchAppParams()])
+        console.log(appParams)
+        console.log(22222222)
         // handle current conversation id
         const { data: conversations, error } = conversationData as { data: ConversationItem[]; error: string }
         if (error) {
@@ -266,10 +266,10 @@ const Main: FC<IMainProps> = () => {
           prompt_template: promptTemplate,
           prompt_variables,
         } as PromptConfig)
-        setVisionConfig({
-          ...file_upload?.image,
-          image_file_size_limit: system_parameters?.system_parameters || 0,
-        })
+        // setVisionConfig({
+        //   ...file_upload?.image,
+        //   image_file_size_limit: system_parameters?.system_parameters || 0,
+        // })
         setConversationList(conversations as ConversationItem[])
 
         if (isNotNewConversation)
@@ -293,7 +293,7 @@ const Main: FC<IMainProps> = () => {
   const [abortController, setAbortController] = useState<AbortController | null>(null)
   const { notify } = Toast
   const logError = (message: string) => {
-    notify({ type: 'error', message })
+    Toast.notify({ type: 'error', message })
   }
 
   const checkCanSend = () => {
@@ -314,12 +314,12 @@ const Main: FC<IMainProps> = () => {
     return true
   }
 
-  const [controlFocus, setControlFocus] = useState(0)
-  const [openingSuggestedQuestions, setOpeningSuggestedQuestions] = useState<string[]>([])
-  const [messageTaskId, setMessageTaskId] = useState('')
-  const [hasStopResponded, setHasStopResponded, getHasStopResponded] = useGetState(false)
-  const [isRespondingConIsCurrCon, setIsRespondingConCurrCon, getIsRespondingConIsCurrCon] = useGetState(true)
-  const [userQuery, setUserQuery] = useState('')
+  // const [controlFocus, setControlFocus] = useState(0)
+  // const [openingSuggestedQuestions, setOpeningSuggestedQuestions] = useState<string[]>([])
+  // const [messageTaskId, setMessageTaskId] = useState('')
+  // const [hasStopResponded, setHasStopResponded, getHasStopResponded] = useGetState(false)
+  // const [isRespondingConIsCurrCon, setIsRespondingConCurrCon, getIsRespondingConIsCurrCon] = useGetState(true)
+  // const [userQuery, setUserQuery] = useState('')
 
   const updateCurrentQA = ({
     responseItem,
@@ -362,7 +362,7 @@ const Main: FC<IMainProps> = () => {
         //     url: '',
         //   }
         // }
-        return item 
+        return item
       })
     }
     if (!visionConfig?.enabled)
@@ -603,21 +603,6 @@ const Main: FC<IMainProps> = () => {
     })
   }
 
-  const handleFeedback = async (messageId: string, feedback: Feedbacktype) => {
-    await updateFeedback({ url: `/messages/${messageId}/feedbacks`, body: { rating: feedback.rating } })
-    const newChatList = chatList.map((item) => {
-      if (item.id === messageId) {
-        return {
-          ...item,
-          feedback,
-        }
-      }
-      return item
-    })
-    setChatList(newChatList)
-    notify({ type: 'success', message: t('common.api.success') })
-  }
-
   const renderSidebar = () => {
     if (!APP_ID || !APP_INFO || !promptConfig)
       return null
@@ -636,62 +621,79 @@ const Main: FC<IMainProps> = () => {
 
   if (!APP_ID || !APP_INFO || !promptConfig)
     return <Loading type='app' />
-
+  const appInfo = {
+    id: '1a8d726c-1370-4a6c-be3c-98d301d97b14',
+    mode: 'chat',
+    icon_type: null,
+    icon: '',
+    icon_background: '',
+    icon_url: '',
+    name: 'My App',
+    description: 'tired',
+    use_icon_as_answer_icon: false,
+  }
+  const installedApp = {
+    app: appInfo,
+    id: '1a8d726c-1370-4a6c-be3c-98d301d97b14',
+    uninstallable: false,
+    is_pinned: false,
+  }
   return (
-    <div className='bg-gray-100'>
-      <Header
-        title={APP_INFO.title}
-        isMobile={isMobile}
-        onShowSideBar={showSidebar}
-        onCreateNewChat={() => handleConversationIdChange('-1')}
-      />
-      <div className="flex rounded-t-2xl bg-white overflow-hidden">
-        {/* sidebar */}
-        {!isMobile && renderSidebar()}
-        {isMobile && isShowSidebar && (
-          <div className='fixed inset-0 z-50'
-            style={{ backgroundColor: 'rgba(35, 56, 118, 0.2)' }}
-            onClick={hideSidebar}
-          >
-            <div className='inline-block' onClick={e => e.stopPropagation()}>
-              {renderSidebar()}
-            </div>
-          </div>
-        )}
-        {/* main */}
-        <div className='flex-grow flex flex-col h-[calc(100vh_-_3rem)] overflow-y-auto'>
-          <ConfigSence
-            conversationName={conversationName}
-            hasSetInputs={hasSetInputs}
-            isPublicVersion={isShowPrompt}
-            siteInfo={APP_INFO}
-            promptConfig={promptConfig}
-            onStartChat={handleStartChat}
-            canEditInputs={canEditInputs}
-            savedInputs={currInputs as Record<string, any>}
-            inputs={inputs}
-            inputsRef={inputsRef}
-            onInputsChange={setInputs}
-          ></ConfigSence>
+    <ChatWithHistory installedAppInfo={installedApp} className='overflow-hidden rounded-2xl shadow-md' />
+    // <div className='bg-gray-100'>
+    //   <Header
+    //     title={APP_INFO.title}
+    //     isMobile={isMobile}
+    //     onShowSideBar={showSidebar}
+    //     onCreateNewChat={() => handleConversationIdChange('-1')}
+    //   />
+    //   <div className="flex rounded-t-2xl bg-white overflow-hidden">
+    //     {/* sidebar */}
+    //     {!isMobile && renderSidebar()}
+    //     {isMobile && isShowSidebar && (
+    //       <div className='fixed inset-0 z-50'
+    //         style={{ backgroundColor: 'rgba(35, 56, 118, 0.2)' }}
+    //         onClick={hideSidebar}
+    //       >
+    //         <div className='inline-block' onClick={e => e.stopPropagation()}>
+    //           {renderSidebar()}
+    //         </div>
+    //       </div>
+    //     )}
+    //     {/* main */}
+    //     <div className='flex-grow flex flex-col h-[calc(100vh_-_3rem)] overflow-y-auto'>
+    //       <ConfigSence
+    //         conversationName={conversationName}
+    //         hasSetInputs={hasSetInputs}
+    //         isPublicVersion={isShowPrompt}
+    //         siteInfo={APP_INFO}
+    //         promptConfig={promptConfig}
+    //         onStartChat={handleStartChat}
+    //         canEditInputs={canEditInputs}
+    //         savedInputs={currInputs as Record<string, any>}
+    //         inputs={inputs}
+    //         inputsRef={inputsRef}
+    //         onInputsChange={setInputs}
+    //       ></ConfigSence>
 
-          {
-            hasSetInputs && (
-              <div className='relative grow h-[200px] pc:w-[794px] max-w-full mobile:w-full pb-[66px] mx-auto mb-3.5 overflow-hidden'>
-                <div className='h-full overflow-y-auto' ref={chatListDomRef}>
-                  <Chat
-                    chatList={chatList}
-                    onSend={handleSend}
-                    onFeedback={handleFeedback}
-                    isResponding={isResponding}
-                    checkCanSend={checkCanSend}
-                    visionConfig={visionConfig}
-                  />
-                </div>
-              </div>)
-          }
-        </div>
-      </div>
-    </div>
+    //       {
+    //         hasSetInputs && (
+    //           <div className='relative grow h-[200px] pc:w-[794px] max-w-full mobile:w-full pb-[66px] mx-auto mb-3.5 overflow-hidden'>
+    //             <div className='h-full overflow-y-auto' ref={chatListDomRef}>
+    //               <Chat
+    //                 chatList={chatList}
+    //                 onSend={handleSend}
+    //                 onFeedback={handleFeedback}
+    //                 isResponding={isResponding}
+    //                 checkCanSend={checkCanSend}
+    //                 visionConfig={visionConfig}
+    //               />
+    //             </div>
+    //           </div>)
+    //       }
+    //     </div>
+    //   </div>
+    // </div>
   )
 }
 

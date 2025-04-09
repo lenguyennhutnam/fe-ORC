@@ -137,7 +137,7 @@ const Debug: FC<IDebug> = ({
 
   const { notify } = useContext(ToastContext)
   const logError = useCallback((message: string) => {
-    notify({ type: 'error', message })
+    Toast.notify({ type: 'error', message })
   }, [notify])
   const [completionFiles, setCompletionFiles] = useState<VisionFile[]>([])
 
@@ -145,11 +145,11 @@ const Debug: FC<IDebug> = ({
     if (isAdvancedMode && mode !== AppType.completion) {
       if (modelModeType === ModelModeType.completion) {
         if (!hasSetBlockStatus.history) {
-          notify({ type: 'error', message: t('appDebug.otherError.historyNoBeEmpty') })
+          Toast.notify({ type: 'error', message: t('appDebug.otherError.historyNoBeEmpty') })
           return false
         }
         if (!hasSetBlockStatus.query) {
-          notify({ type: 'error', message: t('appDebug.otherError.queryNoBeEmpty') })
+          Toast.notify({ type: 'error', message: t('appDebug.otherError.queryNoBeEmpty') })
           return false
         }
       }
@@ -176,7 +176,7 @@ const Debug: FC<IDebug> = ({
     }
 
     if (completionFiles.find(item => item.transfer_method === TransferMethod.local_file && !item.upload_file_id)) {
-      notify({ type: 'info', message: t('appDebug.errorMessage.waitForFileUpload') })
+      Toast.notify({ type: 'info', message: t('appDebug.errorMessage.waitForFileUpload') })
       return false
     }
     return !hasEmptyInput
@@ -201,7 +201,7 @@ const Debug: FC<IDebug> = ({
 
   const sendTextCompletion = async () => {
     if (isResponding) {
-      notify({ type: 'info', message: t('appDebug.errorMessage.waitForResponse') })
+      Toast.notify({ type: 'info', message: t('appDebug.errorMessage.waitForResponse') })
       return false
     }
 

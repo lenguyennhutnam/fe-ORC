@@ -35,7 +35,7 @@ import { VarType as VarKindType } from '@/app/components/workflow/nodes/tool/typ
 import TypeSelector from '@/app/components/workflow/nodes/_base/components/selector'
 import AddButton from '@/app/components/base/button/add-button'
 import Badge from '@/app/components/base/badge'
-import Tooltip from '@/app/components/base/tooltipNew'
+import Tooltip from '@/app/components/base/tooltip'
 import { isExceptionVariable } from '@/app/components/workflow/utils'
 
 const TRIGGER_DEFAULT_WIDTH = 227

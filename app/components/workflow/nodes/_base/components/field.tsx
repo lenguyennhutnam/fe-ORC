@@ -6,7 +6,7 @@ import {
 } from '@remixicon/react'
 import { useBoolean } from 'ahooks'
 import cn from '@/utils/classnames'
-import Tooltip from '@/app/components/base/tooltipNew'
+import Tooltip from '@/app/components/base/tooltip'
 
 type Props = {
   className?: string

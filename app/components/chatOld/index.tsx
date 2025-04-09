@@ -59,7 +59,7 @@ const Chat: FC<IChatProps> = ({
   }
 
   const logError = (message: string) => {
-    notify({ type: 'error', message, duration: 3000 })
+    Toast.notify({ type: 'error', message, duration: 3000 })
   }
 
   const valid = () => {

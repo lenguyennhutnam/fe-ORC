@@ -1,15 +1,17 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import Chat from '../chat'
-import type {
-  ChatConfig,
-  ChatItem,
-  ChatItemInTree,
-  OnSend,
-} from '../types'
-import {
-  useChat
-import { getLastAnswer, isValidGeneratedAnswer } from '../utils'
-import { useChatWithHistoryContext } from './context'
+// import type {
+//   ChatConfig,
+//   ChatItem,
+//   ChatItemInTree,
+//   OnSend,
+// } from '../types'
+// import { getLastAnswer, isValidGeneratedAnswer } from '../utils'
+import { getLastAnswer, isValidGeneratedAnswer } from './base/chat/utils'
+import { useChat } from './chat/hooks'
+// import { useChatWithHistoryContext } from './context'
+import { useChatWithHistoryContext } from '@/app/components/chat/chat-with-history/context'
+// import {useChat}
+import Chat from '@/app/components/chat/index'
 import { InputVarType } from '@/app/components/workflow/types'
 import { TransferMethod } from '@/types/app'
 import InputsForm from '@/app/components/base/chat/chat-with-history/inputs-form'
@@ -25,6 +27,7 @@ import { Markdown } from '@/app/components/base/markdown'
 import cn from '@/utils/classnames'
 
 const ChatWrapper = () => {
+  console.log(456)
   const {
     appParams,
     appPrevChatTree,
@@ -59,7 +62,7 @@ const ChatWrapper = () => {
       },
       supportFeedback: true,
       opening_statement: currentConversationId ? currentConversationItem?.introduction : (config as any).opening_statement,
-    } as ChatConfig
+    } as any
   }, [appParams, currentConversationItem?.introduction, currentConversationId])
   const {
     chatList,
@@ -122,7 +125,7 @@ const ChatWrapper = () => {
     setIsResponding(respondingState)
   }, [respondingState, setIsResponding])
 
-  const doSend: OnSend = useCallback((message, files, isRegenerate = false, parentAnswer: ChatItem | null = null) => {
+  const doSend: any = useCallback((message: any, files: any, isRegenerate = false, parentAnswer: any = null) => {
     const data: any = {
       query: message,
       files,
@@ -152,7 +155,7 @@ const ChatWrapper = () => {
     appId,
   ])
 
-  const doRegenerate = useCallback((chatItem: ChatItemInTree) => {
+  const doRegenerate = useCallback((chatItem: any) => {
     const question = chatList.find(item => item.id === chatItem.parentMessageId)!
     const parentAnswer = chatList.find(item => item.id === question.parentMessageId)
     doSend(question.content, question.message_files, true, isValidGeneratedAnswer(parentAnswer) ? parentAnswer : null)

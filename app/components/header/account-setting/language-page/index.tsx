@@ -30,12 +30,12 @@ export default function LanguagePage() {
     setEditing(true)
     try {
       await updateUserProfile({ url, body: { [bodyKey]: item.value } })
-      notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
+      Toast.notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
 
       setLocaleOnClient(item.value.toString())
     }
     catch (e) {
-      notify({ type: 'error', message: (e as Error).message })
+      Toast.notify({ type: 'error', message: (e as Error).message })
     }
     finally {
       setEditing(false)
@@ -49,12 +49,12 @@ export default function LanguagePage() {
     setEditing(true)
     try {
       await updateUserProfile({ url, body: { [bodyKey]: item.value } })
-      notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
+      Toast.notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
 
       mutateUserProfile()
     }
     catch (e) {
-      notify({ type: 'error', message: (e as Error).message })
+      Toast.notify({ type: 'error', message: (e as Error).message })
     }
     finally {
       setEditing(false)

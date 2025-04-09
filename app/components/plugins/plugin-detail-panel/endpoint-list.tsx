@@ -51,7 +51,7 @@ const EndpointList = ({ detail }: Props) => {
       hideEndpointModal()
     },
     onError: () => {
-      Toast.notify({ type: 'error', message: t('common.actionMsg.modifiedUnsuccessfully') })
+      Toast.Toast.notify({ type: 'error', message: t('common.actionMsg.modifiedUnsuccessfully') })
     },
   })
 

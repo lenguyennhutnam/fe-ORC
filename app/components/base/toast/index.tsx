@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/indent */
 'use client'
 import type { ReactNode } from 'react'
 import React, { useEffect, useState } from 'react'
@@ -11,8 +10,9 @@ import {
   RiInformation2Fill,
 } from '@remixicon/react'
 import { createContext, useContext } from 'use-context-selector'
+import { noop } from 'lodash-es'
 import ActionButton from '@/app/components/base/action-button'
-import classNames from '@/config/classnames'
+import classNames from '@/utils/classnames'
 
 export type IToastProps = {
   type?: 'success' | 'error' | 'warning' | 'info'
@@ -29,10 +29,7 @@ type IToastContext = {
   close: () => void
 }
 
-export const ToastContext = createContext<IToastContext>({
-  notify: () => { }, // dummy default
-  close: () => { },
-})
+export const ToastContext = createContext<IToastContext>({} as IToastContext)
 export const useToastContext = () => useContext(ToastContext)
 const Toast = ({
   type = 'info',
@@ -58,8 +55,7 @@ const Toast = ({
     <div className={`absolute inset-0 -z-10 opacity-40 ${(type === 'success' && 'bg-toast-success-bg')
       || (type === 'warning' && 'bg-toast-warning-bg')
       || (type === 'error' && 'bg-toast-error-bg')
-      || (type === 'info' && 'bg-toast-info-bg')
-      }`}
+      || (type === 'info' && 'bg-toast-info-bg')}`}
     />
     <div className={`flex ${size === 'md' ? 'gap-1' : 'gap-0.5'}`}>
       <div className={`flex items-center justify-center ${size === 'md' ? 'p-0.5' : 'p-1'}`}>
@@ -137,7 +133,7 @@ Toast.notify = ({
 
     root.render(
       <ToastContext.Provider value={{
-        notify: () => { },
+        notify: noop,
         close: () => {
           if (holder) {
             root.unmount()

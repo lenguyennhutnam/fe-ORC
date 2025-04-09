@@ -14,7 +14,7 @@ import {
 import { BLOCK_CLASSIFICATIONS } from './constants'
 import { useBlocks } from './hooks'
 import type { ToolDefaultValue } from './types'
-import Tooltip from '@/app/components/base/tooltipNew'
+import Tooltip from '@/app/components/base/tooltip'
 import Badge from '@/app/components/base/badge'
 
 type BlocksProps = {

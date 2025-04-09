@@ -1,17 +1,17 @@
 import type { FC } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ImagePlus } from '../iconsNew/src/vender/line/images'
-import { Upload03 } from '../iconsNew/src/vender/line/general'
 import Uploader from './uploader'
 import ImageLinkInput from './image-link-input'
-import cn from '@/config/classnames'
+import cn from '@/utils/classnames'
+import { ImagePlus } from '@/app/components/base/icons/src/vender/line/images'
 import { TransferMethod } from '@/types/app'
 import {
   PortalToFollowElem,
   PortalToFollowElemContent,
   PortalToFollowElemTrigger,
 } from '@/app/components/base/portal-to-follow-elem'
+import { Upload03 } from '@/app/components/base/icons/src/vender/line/general'
 import type { ImageFile, VisionSettings } from '@/types/app'
 
 type UploadOnlyFromLocalProps = {

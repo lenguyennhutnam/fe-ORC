@@ -92,7 +92,7 @@ const ModelLoadBalancingModal = ({ provider, model, open = false, onClose, onSav
         },
       )
       if (res.result === 'success') {
-        notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
+        Toast.notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
         mutate()
         onSave?.(provider.provider)
         onClose?.()

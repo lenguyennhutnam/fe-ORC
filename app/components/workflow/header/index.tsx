@@ -167,7 +167,7 @@ const Header: FC = () => {
       })
 
       if (res) {
-        notify({ type: 'success', message: t('common.api.actionSuccess') })
+        Toast.notify({ type: 'success', message: t('common.api.actionSuccess') })
         updateAppDetail()
         workflowStore.getState().setPublishedAt(res.created_at)
         resetWorkflowVersionHistory()

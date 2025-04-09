@@ -14,7 +14,7 @@ import Switch from '@/app/components/base/switch'
 import Tooltip from '@/app/components/base/tooltip'
 import { useProviderContext, useProviderContextSelector } from '@/context/provider-context'
 import { disableModel, enableModel } from '@/service/common'
-import { Plan } from '@/app/components/billing/type'
+// import { Plan } from '@/app/components/billing/type'
 import { useAppContext } from '@/context/app-context'
 
 export type ModelListItemProps = {
@@ -104,7 +104,7 @@ const ModelListItem = ({ model, provider, isConfigurable, onConfig, onModifyLoad
               <Tooltip
                 popupContent={
                   <span className='font-semibold'>{t('common.modelProvider.modelHasBeenDeprecated')}</span>} offset={{ mainAxis: 4 }
-                }
+                  }
                 needsDelay
               >
                 <Switch defaultValue={false} disabled size='md' />

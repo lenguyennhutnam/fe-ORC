@@ -4,7 +4,7 @@ import React, { useCallback } from 'react'
 import type { VariantProps } from 'class-variance-authority'
 import { cva } from 'class-variance-authority'
 import cn from '@/utils/classnames'
-import Tooltip from '@/app/components/base/tooltipNew'
+import Tooltip from '@/app/components/base/tooltip'
 
 const variants = cva([], {
   variants: {

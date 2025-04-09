@@ -1,4 +1,4 @@
-import Tooltip from '@/app/components/base/tooltipNew'
+import Tooltip from '@/app/components/base/tooltip'
 import Indicator from '@/app/components/header/indicator'
 import classNames from '@/utils/classnames'
 import { type ComponentProps, type PropsWithChildren, type ReactNode, memo } from 'react'
