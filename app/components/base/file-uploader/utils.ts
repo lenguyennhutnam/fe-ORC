@@ -28,7 +28,7 @@ export const fileUpload: FileUpload = ({
       onProgressCallback(percent)
     }
   }
-
+  console.log(`file here ${url}`)
   upload({
     xhr: new XMLHttpRequest(),
     data: formData,

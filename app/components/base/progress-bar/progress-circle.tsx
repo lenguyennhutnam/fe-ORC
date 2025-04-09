@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import cn from '@/config/classnames'
+import cn from '@/utils/classnames'
 
 type ProgressCircleProps = {
   className?: string

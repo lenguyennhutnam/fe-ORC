@@ -5,7 +5,7 @@ import { ContentType, base, baseOptions, getAccessToken } from './fetch'
 import { API_PREFIX } from '@/config'
 import Toast from '@/app/components/base/toast'
 // import type { AnnotationReply, MessageEnd, MessageReplace, ThoughtItem } from '@/app/components/base/chat/chat/type'
-import type { AnnotationReply, MessageEnd, MessageReplace, ThoughtItem } from '@/app/components/chat/type'
+import type { AnnotationReply, MessageEnd, MessageReplace, ThoughtItem } from '@/app/components/chat/types'
 import type { VisionFile } from '@/types/app'
 import type {
   AgentLogResponse,

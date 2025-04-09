@@ -141,6 +141,7 @@ export const useLocalFileUploader = ({ limit, disabled = false, onUpload }: useL
     reader.addEventListener(
       'load',
       () => {
+        console.log('loading')
         const imageFile = {
           type: TransferMethod.local_file,
           _id: `${Date.now()}`,

@@ -1,6 +1,5 @@
 import { useFile } from '../hooks'
 import { useStore } from '../store'
-import type { FileEntity } from '../types'
 import FileImageItem from './file-image-item'
 import FileItem from './file-item'
 import cn from '@/config/classnames'
@@ -15,7 +14,7 @@ export enum SupportUploadFileTypes {
 
 type FileListProps = {
   className?: string
-  files: FileEntity[]
+  files: any
   onRemove?: (fileId: string) => void
   onReUpload?: (fileId: string) => void
   showDeleteAction?: boolean
@@ -34,7 +33,7 @@ export const FileList = ({
   return (
     <div className={cn('flex flex-wrap gap-2', className)}>
       {
-        files.map((file) => {
+        files.map((file: any) => {
           if (file.supportFileType === SupportUploadFileTypes.image) {
             return (
               <FileImageItem

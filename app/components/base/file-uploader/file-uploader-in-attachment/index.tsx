@@ -54,7 +54,10 @@ const FileUploaderInAttachment = ({
       <Button
         key={option.value}
         variant='tertiary'
-        className={cn('relative grow', open && 'bg-components-button-tertiary-bg-hover')}
+        className={cn(
+          'relative grow flex items-center justify-center w-full py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-200',
+          open && 'bg-components-button-tertiary-bg-hover',
+        )}
         disabled={!!(fileConfig.number_limits && files.length >= fileConfig.number_limits)}
       >
         {option.icon}

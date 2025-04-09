@@ -4,7 +4,6 @@ import React from 'react'
 import cn from 'classnames'
 import { useTranslation } from 'react-i18next'
 import s from './style.module.css'
-import { StarIcon } from '@/app/components//welcome/massive-component'
 import Button from '@/app/components/base/button'
 
 export type ITemplateVarPanelProps = {
@@ -44,7 +43,7 @@ export const PanelTitle: FC<{ title: string; className?: string }> = ({
 }) => {
   return (
     <div className={cn(className, 'flex items-center space-x-1 text-indigo-600')}>
-      <StarIcon />
+      {/* <StarIcon /> */}
       <span className='text-xs'>{title}</span>
     </div>
   )

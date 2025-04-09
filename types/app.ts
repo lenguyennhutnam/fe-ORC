@@ -1,6 +1,6 @@
 import type { Annotation } from './log'
 import type { Locale } from '@/i18n'
-import type { ThoughtItem } from '@/app/components/chat/type'
+// import type { ThoughtItem } from '@/app/components/chat/types'
 
 export type PromptVariable = {
   key: string
@@ -88,7 +88,7 @@ export type IChatItem = {
   isOpeningStatement?: boolean
   suggestedQuestions?: string[]
   log?: { role: string; text: string }[]
-  agent_thoughts?: ThoughtItem[]
+  agent_thoughts?: any
   message_files?: VisionFile[]
 }
 
@@ -129,8 +129,8 @@ export enum TransferMethod {
 export type VisionSettings = {
   enabled: boolean
   number_limits: number
-  detail: Resolution
-  transfer_methods: TransferMethod[]
+  detail: Resolution | string
+  transfer_methods: TransferMethod[] | string[]
   image_file_size_limit?: number | string
 }
 
@@ -279,4 +279,10 @@ export type Callback = {
 
 export type Feedback = {
   rating: 'like' | 'dislike' | null
+}
+
+export enum Theme {
+  light = 'light',
+  dark = 'dark',
+  system = 'system',
 }

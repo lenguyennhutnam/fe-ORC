@@ -15,7 +15,7 @@ const AppUnavailable: FC<IAppUnavailableProps> = ({
   const { t } = useTranslation()
   let message = errMessage
   if (!errMessage)
-    message = (isUnknownReason ? t('app.common.appUnkonwError') : t('app.common.appUnavailable')) as string
+    message = (isUnknownReason ? t('share.common.appUnkonwError') : t('share.common.appUnavailable')) as string
   return (
     <div className='flex items-center justify-center w-screen h-screen'>
       <h1 className='mr-5 h-[50px] leading-[50px] pr-5 text-[24px] font-medium'

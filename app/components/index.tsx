@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 'use client'
 import type { FC } from 'react'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import produce, { setAutoFreeze } from 'immer'
 import { useBoolean, useGetState } from 'ahooks'
+import { useChatWithHistoryContext } from './base/context/context'
 import useConversation from '@/hooks/use-conversation'
 import Toast from '@/app/components/base/toast'
 import Sidebar from '@/app/components/sidebar'
@@ -15,7 +16,7 @@ import type { ChatItem, ConversationItem, Feedbacktype, PromptConfig, VisionFile
 import { Resolution, TransferMethod, WorkflowRunningStatus } from '@/types/app'
 import Chat from '@/app/components/chat'
 import { setLocaleOnClient } from '@/i18n/client'
-import useBreakpoints, { MediaType } from '@/hooks/use-breakpoints'
+import useBreakpoints from '@/hooks/use-breakpoints'
 import Loading from '@/app/components/base/loading'
 import { replaceVarWithValues, userInputsFormToPromptVariables } from '@/utils/prompt'
 import AppUnavailable from '@/app/components/app-unavailable'
@@ -30,12 +31,28 @@ export type IMainProps = {
 const Main: FC<IMainProps> = () => {
   const { t } = useTranslation()
   const media = useBreakpoints()
-  const isMobile = media === MediaType.mobile
+  const {
+    appInfoError,
+    appData,
+    appInfoLoading,
+    appChatListDataLoading,
+    chatShouldReloadKey,
+    isMobile,
+    themeBuilder,
+    sidebarCollapseState,
+  } = useChatWithHistoryContext()
+  // isMobile = (media === MediaType.mobile)
   const hasSetAppConfig = APP_ID && API_KEY
 
   /*
   * app info
   */
+  const [inputs, doSetInputs] = useState<Record<string, any>>({})
+  const inputsRef = useRef(inputs)
+  const setInputs = useCallback((newInputs: Record<string, any>) => {
+    doSetInputs(newInputs)
+    inputsRef.current = newInputs
+  }, [])
   const [appUnavailable, setAppUnavailable] = useState<boolean>(false)
   const [isUnknownReason, setIsUnknownReason] = useState<boolean>(false)
   const [promptConfig, setPromptConfig] = useState<PromptConfig | null>(null)
@@ -48,7 +65,7 @@ const Main: FC<IMainProps> = () => {
     detail: Resolution.low,
     transfer_methods: [TransferMethod.local_file],
   })
-
+  // const { data: fileUploadConfigResponse } = useSWR({ url: '/files/upload' }, fetchFileUploadConfig)
   useEffect(() => {
     if (APP_INFO?.title)
       document.title = `${APP_INFO.title} - Powered by Dify`
@@ -85,6 +102,7 @@ const Main: FC<IMainProps> = () => {
   const [conversationIdChangeBecauseOfNew, setConversationIdChangeBecauseOfNew, getConversationIdChangeBecauseOfNew] = useGetState(false)
   const [isChatStarted, { setTrue: setChatStarted, setFalse: setChatNotStarted }] = useBoolean(false)
   const handleStartChat = (inputs: Record<string, any>) => {
+    console.log(inputs)
     createNewChat()
     setConversationIdChangeBecauseOfNew(true)
     setCurrInputs(inputs)
@@ -99,7 +117,7 @@ const Main: FC<IMainProps> = () => {
     return isChatStarted
   })()
 
-  const conversationName = currConversationInfo?.name || t('app.chat.newChatDefaultName') as string
+  const conversationName = currConversationInfo?.name || t('share.chat.newChatDefaultName') as string
   const conversationIntroduction = currConversationInfo?.introduction || ''
 
   const handleConversationSwitch = () => {
@@ -189,7 +207,7 @@ const Main: FC<IMainProps> = () => {
     setConversationList(produce(conversationList, (draft) => {
       draft.unshift({
         id: '-1',
-        name: t('app.chat.newChatDefaultName'),
+        name: t('share.chat.newChatDefaultName'),
         inputs: newConversationInputs,
         introduction: conversationIntroduction,
       })
@@ -240,7 +258,7 @@ const Main: FC<IMainProps> = () => {
         const { user_input_form, opening_statement: introduction, file_upload, system_parameters }: any = appParams
         setLocaleOnClient(APP_INFO.default_language, true)
         setNewConversationInfo({
-          name: t('app.chat.newChatDefaultName'),
+          name: t('share.chat.newChatDefaultName'),
           introduction,
         })
         const prompt_variables = userInputsFormToPromptVariables(user_input_form)
@@ -290,7 +308,7 @@ const Main: FC<IMainProps> = () => {
 
     const emptyInput = inputLens < promptVariablesLens || Object.values(currInputs).find(v => !v)
     if (emptyInput) {
-      logError(t('app.errorMessage.valueOfVarRequired'))
+      logError(t('common.errorMessage.valueOfVarRequired'))
       return false
     }
     return true
@@ -328,7 +346,7 @@ const Main: FC<IMainProps> = () => {
 
   const handleSend = async (message: string, files?: VisionFile[]) => {
     if (isResponding) {
-      notify({ type: 'info', message: t('app.errorMessage.waitForResponse') })
+      notify({ type: 'info', message: t('common.errorMessage.waitForResponse') })
       return
     }
     const data: Record<string, any> = {
@@ -344,7 +362,7 @@ const Main: FC<IMainProps> = () => {
         //     url: '',
         //   }
         // }
-        return item
+        return item 
       })
     }
     if (!visionConfig?.enabled)
@@ -651,7 +669,9 @@ const Main: FC<IMainProps> = () => {
             onStartChat={handleStartChat}
             canEditInputs={canEditInputs}
             savedInputs={currInputs as Record<string, any>}
-            onInputsChange={setCurrInputs}
+            inputs={inputs}
+            inputsRef={inputsRef}
+            onInputsChange={setInputs}
           ></ConfigSence>
 
           {

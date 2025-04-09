@@ -2,12 +2,10 @@
 import type { FC } from 'react'
 import React from 'react'
 import type { ThoughtItem, ToolInfoInThought } from '../type'
-import Tool from './tool'
-import type { Emoji } from '@/types/tools'
+import ToolDetail from '@/app/components/chat/answer/tool-detail'
 
 export type IThoughtProps = {
   thought: ThoughtItem
-  allToolIcons: Record<string, string | Emoji>
   isFinished: boolean
 }
 
@@ -24,7 +22,6 @@ function getValue(value: string, isValueArray: boolean, index: number) {
 
 const Thought: FC<IThoughtProps> = ({
   thought,
-  allToolIcons,
   isFinished,
 }) => {
   const [toolNames, isValueArray]: [string[], boolean] = (() => {
@@ -40,6 +37,7 @@ const Thought: FC<IThoughtProps> = ({
   const toolThoughtList = toolNames.map((toolName, index) => {
     return {
       name: toolName,
+      label: thought.tool_labels?.toolName?.language ?? toolName,
       input: getValue(thought.tool_input, isValueArray, index),
       output: getValue(thought.observation, isValueArray, index),
       isFinished,
@@ -49,10 +47,9 @@ const Thought: FC<IThoughtProps> = ({
   return (
     <div className='my-2 space-y-2'>
       {toolThoughtList.map((item: ToolInfoInThought, index) => (
-        <Tool
+        <ToolDetail
           key={index}
           payload={item}
-          allToolIcons={allToolIcons}
         />
       ))}
     </div>

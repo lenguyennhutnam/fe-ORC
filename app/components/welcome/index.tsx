@@ -1,20 +1,37 @@
 'use client'
-import type { FC } from 'react'
+import type { FC, FormEvent } from 'react'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { RiPlayLargeLine } from '@remixicon/react'
 import TemplateVarPanel, { PanelTitle, VarOpBtnGroup } from '../value-panel'
 import { FileUploaderInAttachmentWrapper } from '../base/file-uploader'
 import { useChatWithHistoryContext } from '../base/context/context'
-import s from './style.module.css'
+import Button from '../base/button/newBtn'
+import TextGenerationImageUploader from '../base/image-uploader/text-generation-image-uploader'
+import { getProcessedFiles } from '../base/file-uploader/utils'
+import Textarea from '../base/textarea'
+import Input from '../base/input'
 import { AppInfoComp, ChatBtn, EditBtn, FootLogo, PromptTemplate } from './massive-component'
-import type { AppInfo, PromptConfig } from '@/types/app'
+import type { AppInfo, PromptConfig, VisionSettings } from '@/types/app'
 import Toast from '@/app/components/base/toast'
 import Select from '@/app/components/base/select'
 import { DEFAULT_VALUE_MAX_LEN } from '@/config'
+import cn from '@/config/classnames'
+import useBreakpoints, { MediaType } from '@/hooks/use-breakpoints'
 // regex to match the {{}} and replace it with a span
 const regex = /\{\{([^}]+)\}\}/g
 
+// export type IPromptValuePanelProps = {
+//   appType: AppType
+//   onSend?: () => void
+//   inputs: any
+//   visionConfig: VisionSettings
+//   onVisionFilesChange: (files: VisionFile[]) => void
+// }
+
 export type IWelcomeProps = {
+  inputRef: any
+  inputs: any
   conversationName: string
   hasSetInputs: boolean
   isPublicVersion: boolean
@@ -26,18 +43,42 @@ export type IWelcomeProps = {
   onInputsChange: (inputs: Record<string, any>) => void
 }
 
-const Welcome: FC<IWelcomeProps> = ({
+const Welcome: FC<any> = ({
+  // visionConfig,
   conversationName,
   hasSetInputs,
   isPublicVersion,
   siteInfo,
   promptConfig,
   onStartChat,
+  inputsRef,
+  inputs,
+  onVisionFilesChange,
+  onSend,
   canEditInputs,
   savedInputs,
   onInputsChange,
 }) => {
+  const visionConfig: VisionSettings = {
+    enabled: false,
+    number_limits: 2,
+    detail: 'low',
+    transfer_methods: ['local_file'],
+  }
   const { t } = useTranslation()
+  const media = useBreakpoints()
+  const isPC = media === MediaType.pc
+  const onClear = () => {
+    const newInputs: Record<string, any> = {}
+    promptConfig.prompt_variables.forEach((item: any) => {
+      newInputs[item.key] = ''
+    })
+    onInputsChange(newInputs)
+  }
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    onSend()
+  }
   const {
     appParams,
     inputsForms,
@@ -51,37 +92,50 @@ const Welcome: FC<IWelcomeProps> = ({
   const inputsFormValue = currentConversationId ? currentConversationInputs : newConversationInputs
   const hasVar = promptConfig.prompt_variables.length > 0
   const [isFold, setIsFold] = useState<boolean>(true)
-  const [inputs, setInputs] = useState<Record<string, any>>((() => {
-    if (hasSetInputs)
-      return savedInputs
+  // const [inputs, setInputs] = useState<Record<string, any>>((() => {
+  //   if (hasSetInputs)
+  //     return savedInputs
 
-    const res: Record<string, any> = {}
-    if (promptConfig) {
-      promptConfig.prompt_variables.forEach((item) => {
-        res[item.key] = ''
-      })
-    }
-    return res
-  })())
+  //   const res: Record<string, any> = {}
+  //   if (promptConfig) {
+  //     promptConfig.prompt_variables.forEach((item: any) => {
+  //       res[item.key] = ''
+  //     })
+  //   }
+  //   return res
+  // })())
+  const handleInputsChange = useCallback((newInputs: Record<string, any>) => {
+    onInputsChange(newInputs)
+    inputsRef.current = newInputs
+  }, [onInputsChange, inputsRef])
+
   useEffect(() => {
-    if (!savedInputs) {
-      const res: Record<string, any> = {}
-      if (promptConfig) {
-        promptConfig.prompt_variables.forEach((item) => {
-          res[item.key] = ''
-        })
-      }
-      setInputs(res)
-    }
-    else {
-      setInputs(savedInputs)
-    }
-  }, [savedInputs])
+    const newInputs: Record<string, any> = {}
+    promptConfig.prompt_variables.forEach((item: any) => {
+      newInputs[item.key] = ''
+    })
+    onInputsChange(newInputs)
+  }, [promptConfig.prompt_variables])
+
+  // useEffect(() => {
+  //   if (!savedInputs) {
+  //     const res: Record<string, any> = {}
+  //     if (promptConfig) {
+  //       promptConfig.prompt_variables.forEach((item: any) => {
+  //         res[item.key] = ''
+  //       })
+  //     }
+  //     setInputs(res)
+  //   }
+  //   else {
+  //     setInputs(savedInputs)
+  //   }
+  // }, [savedInputs])
 
   const highLightPromoptTemplate = (() => {
     if (!promptConfig)
       return ''
-    const res = promptConfig.prompt_template.replace(regex, (match, p1) => {
+    const res = promptConfig.prompt_template.replace(regex, (match: any, p1: any) => {
       return `<span class='text-gray-800 font-bold'>${inputs?.[p1] ? inputs?.[p1] : match}</span>`
     })
     return res
@@ -112,63 +166,106 @@ const Welcome: FC<IWelcomeProps> = ({
   const renderInputs = () => {
     return (
       <div className='space-y-3'>
-        {promptConfig.prompt_variables.map(item => (
-          <div className='tablet:flex items-start mobile:space-y-2 tablet:space-y-0 mobile:text-xs tablet:text-sm' key={item.key}>
-            <label className={`flex-shrink-0 flex items-center tablet:leading-9 mobile:text-gray-700 tablet:text-gray-900 mobile:font-medium pc:font-normal ${s.formLabel}`}>{item.name}</label>
-            {item.type === 'select'
-              && (
-                <Select
-                  className='w-full'
-                  defaultValue={inputs?.[item.key]}
-                  onSelect={(i) => {
-                    setInputs({ ...inputs, [item.key]: i.value })
-                  }}
-                  items={(item.options || []).map(i => ({ name: i, value: i }))}
-                  allowSearch={false}
-                  bgClassName='bg-gray-50'
-                />
-              )}
-            {item.type === 'string' && (
-              <input
-                placeholder={`${item.name}${!item.required ? `(${t('app.variableTable.optional')})` : ''}`}
-                value={inputs?.[item.key] || ''}
-                onChange={(e) => { setInputs({ ...inputs, [item.key]: e.target.value }) }}
-                className={'w-full flex-grow py-2 pl-3 pr-3 box-border rounded-lg bg-gray-50'}
-                maxLength={item.max_length || DEFAULT_VALUE_MAX_LEN}
-              />
-            )}
-            {item.type === 'paragraph' && (
-              <textarea
-                className="w-full h-[104px] flex-grow py-2 pl-3 pr-3 box-border rounded-lg bg-gray-50"
-                placeholder={`${item.name}${!item.required ? `(${t('app.variableTable.optional')})` : ''}`}
-                value={inputs?.[item.key] || ''}
-                onChange={(e) => { setInputs({ ...inputs, [item.key]: e.target.value }) }}
-              />
-            )}
-            {item.type === 'number' && (
-              <input
-                type="number"
-                className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 "
-                placeholder={`${item.name}${!item.required ? `(${t('appDebug.variableTable.optional')})` : ''}`}
-                value={inputs[item.key]}
-                onChange={(e) => { onInputsChange({ ...inputs, [item.key]: e.target.value }) }}
-              />
-            )}
-            {item.type === 'file' && (
-              <FileUploaderInAttachmentWrapper
-                value={inputs?.[item.key] ? [inputs?.[item.key]] : []}
-                onChange={files => handleFormChange(variable, files[0])}
-                fileConfig={{
-                  allowed_file_types: item.allowed_file_types,
-                  allowed_file_extensions: item.allowed_file_extensions,
-                  allowed_file_upload_methods: item.allowed_file_upload_methods,
-                  number_limits: 1,
-                  fileUploadConfig: (form as any).fileUploadConfig,
-                }}
-              />
-            )}
+        <form onSubmit={onSubmit}>
+          {promptConfig.prompt_variables.map((item: any) => (
+            <div className='mt-4 w-full' key={item.key}>
+              <label className='text-base font-bold flex h-6 items-center text-text-secondary'>{item.name}</label>
+              <div className='mt-1'>
+                {item.type === 'select' && (
+                  <Select
+                    className='w-full'
+                    defaultValue={inputs[item.key]}
+                    onSelect={(i) => { handleInputsChange({ ...inputsRef.current, [item.key]: i.value }) }}
+                    items={(item.options || []).map((i: any) => ({ name: i, value: i }))}
+                    allowSearch={false}
+                  />
+                )}
+                {item.type === 'string' && (
+                  <Input
+                    type="text"
+                    placeholder={`${item.name}${!item.required ? `(${t('appDebug.variableTable.optional')})` : ''}`}
+                    value={inputs[item.key]}
+                    onChange={(e: any) => { handleInputsChange({ ...inputsRef.current, [item.key]: e.target.value }) }}
+                    maxLength={item.max_length || DEFAULT_VALUE_MAX_LEN}
+                  />
+                )}
+                {item.type === 'paragraph' && (
+                  <Textarea
+                    className='h-[104px] sm:text-xs'
+                    placeholder={`${item.name}${!item.required ? `(${t('appDebug.variableTable.optional')})` : ''}`}
+                    value={inputs[item.key]}
+                    onChange={(e: any) => { handleInputsChange({ ...inputsRef.current, [item.key]: e.target.value }) }}
+                  />
+                )}
+                {item.type === 'number' && (
+                  <Input
+                    type="number"
+                    placeholder={`${item.name}${!item.required ? `(${t('appDebug.variableTable.optional')})` : ''}`}
+                    value={inputs[item.key]}
+                    onChange={(e: any) => { handleInputsChange({ ...inputsRef.current, [item.key]: e.target.value }) }}
+                  />
+                )}
+                {item.type === 'file' && (
+                  <FileUploaderInAttachmentWrapper
+                    onChange={(files) => { handleInputsChange({ ...inputsRef.current, [item.key]: getProcessedFiles(files)[0] }) }}
+                    fileConfig={{
+                      ...item.config,
+                      fileUploadConfig: (visionConfig as any).fileUploadConfig,
+                    }}
+                  />
+                )}
+                {item.type === 'file-list' && (
+                  <FileUploaderInAttachmentWrapper
+                    onChange={(files) => { handleInputsChange({ ...inputsRef.current, [item.key]: getProcessedFiles(files) }) }}
+                    fileConfig={{
+                      ...item.config,
+                      fileUploadConfig: (visionConfig as any).fileUploadConfig,
+                    }}
+                  />
+                )}
+              </div>
+            </div>
+          ))}
+          {
+            visionConfig?.enabled && (
+              <div className="mt-4 w-full">
+                <div className="system-md-semibold flex h-6 items-center text-text-secondary">{t('common.imageUploader.imageUpload')}</div>
+                <div className='mt-1'>
+                  <TextGenerationImageUploader
+                    settings={visionConfig}
+                    onFilesChange={files => onVisionFilesChange(files.filter(file => file.progress !== -1).map(fileItem => ({
+                      type: 'image',
+                      transfer_method: fileItem.type,
+                      url: fileItem.url,
+                      upload_file_id: fileItem.fileId,
+                    })))}
+                  />
+                </div>
+              </div>
+            )
+          }
+          <div className='mb-3 mt-6 w-full'>
+            <div className="flex items-center justify-between gap-2">
+              {/* Nút clear */}
+              <Button
+                onClick={onClear}
+                disabled={false}
+              >
+                <span className='text-[13px]'>{t('common.operation.clear')}</span>
+              </Button>
+              <Button
+                className={cn(!isPC && 'grow')}
+                type='submit'
+                variant="primary"
+                disabled={false}
+              >
+                {/* Nút excute */}
+                <RiPlayLargeLine className="mr-1 h-4 w-4 shrink-0" aria-hidden="true" />
+                <span className='text-[13px]'>{t('share.generation.run')}</span>
+              </Button>
+            </div>
           </div>
-        ))}
+        </form>
       </div>
     )
   }
@@ -178,7 +275,7 @@ const Welcome: FC<IWelcomeProps> = ({
     const promptVariablesLens = promptConfig.prompt_variables.length
     const emptyInput = inputLens < promptVariablesLens || Object.values(inputs).filter(v => v === '').length > 0
     if (emptyInput) {
-      logError(t('app.errorMessage.valueOfVarRequired'))
+      logError(t('common.errorMessage.valueOfVarRequired'))
       return false
     }
     return true
@@ -187,7 +284,7 @@ const Welcome: FC<IWelcomeProps> = ({
   const handleChat = () => {
     if (!canChat())
       return
-
+    console.log(inputs)
     onStartChat(inputs)
   }
 
@@ -201,7 +298,7 @@ const Welcome: FC<IWelcomeProps> = ({
             header={
               <>
                 <PanelTitle
-                  title={t('app.chat.publicPromptConfigTitle')}
+                  title={t('share.chat.publicPromptConfigTitle')}
                   className='mb-1'
                 />
                 <PromptTemplate html={highLightPromoptTemplate} />
@@ -225,7 +322,7 @@ const Welcome: FC<IWelcomeProps> = ({
       </TemplateVarPanel>
     )
   }
-
+  // Khung input nhap anh
   const renderVarPanel = () => {
     return (
       <TemplateVarPanel
@@ -254,7 +351,7 @@ const Welcome: FC<IWelcomeProps> = ({
           setIsFold(true)
         }}
         onCancel={() => {
-          setInputs(savedInputs)
+          // setInputs(savedInputs)
           setIsFold(true)
         }}
       />
@@ -269,7 +366,7 @@ const Welcome: FC<IWelcomeProps> = ({
           header={
             <>
               <PanelTitle
-                title={t('app.chat.publicPromptConfigTitle')}
+                title={t('share.chat.publicPromptConfigTitle')}
                 className='mb-1'
               />
               <PromptTemplate html={highLightPromoptTemplate} />
@@ -285,13 +382,13 @@ const Welcome: FC<IWelcomeProps> = ({
         header={
           <>
             <PanelTitle
-              title={t('app.chat.publicPromptConfigTitle')}
+              title={t('share.chat.publicPromptConfigTitle')}
               className='mb-1'
             />
             <PromptTemplate html={highLightPromoptTemplate} />
             {isFold && (
               <div className='flex items-center justify-between mt-3 border-t border-indigo-100 pt-4 text-xs text-indigo-600'>
-                <span className='text-gray-700'>{t('app.chat.configStatusDes')}</span>
+                <span className='text-gray-700'>{t('share.chat.configStatusDes')}</span>
                 <EditBtn onClick={() => setIsFold(false)} />
               </div>
             )}
@@ -314,7 +411,7 @@ const Welcome: FC<IWelcomeProps> = ({
         header={
           <div className='flex items-center justify-between text-indigo-600'>
             <PanelTitle
-              title={!isFold ? t('app.chat.privatePromptConfigTitle') : t('app.chat.configStatusDes')}
+              title={!isFold ? t('share.chat.privatePromptConfigTitle') : t('share.chat.configStatusDes')}
             />
             {isFold && (
               <EditBtn onClick={() => setIsFold(false)} />
@@ -366,22 +463,23 @@ const Welcome: FC<IWelcomeProps> = ({
           <div className='mt-4 flex justify-between items-center h-8 text-xs text-gray-400'>
 
             {siteInfo.privacy_policy
-              ? <div>{t('app.chat.privacyPolicyLeft')}
+              ? <div>{t('share.chat.privacyPolicyLeft')}
                 <a
                   className='text-gray-500'
                   href={siteInfo.privacy_policy}
-                  target='_blank'>{t('app.chat.privacyPolicyMiddle')}</a>
-                {t('app.chat.privacyPolicyRight')}
+                  target='_blank'>{t('share.chat.privacyPolicyMiddle')}</a>
+                {t('share.chat.privacyPolicyRight')}
               </div>
               : <div>
               </div>}
             <a className='flex items-center pr-3 space-x-3' href="https://dify.ai/" target="_blank">
-              <span className='uppercase'>{t('app.chat.powerBy')}</span>
+              <span className='uppercase'>POWERED BY</span>
               <FootLogo />
             </a>
           </div>
-        )}
-      </div>
+        )
+        }
+      </div >
     </div >
   )
 }
