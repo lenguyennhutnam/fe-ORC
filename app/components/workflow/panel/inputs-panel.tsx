@@ -22,8 +22,8 @@ import Button from '@/app/components/base/button'
 import { useFeatures } from '@/app/components/base/features/hooks'
 import {
   getProcessedInputs,
-} from '@/app/components/base/chat/chat/utils'
-import { useCheckInputsForms } from '@/app/components/base/chat/chat/check-input-forms-hooks'
+} from '@/app/components/chat/chat/utils'
+import { useCheckInputsForms } from '@/app/components/chat/chat/check-input-forms-hooks'
 
 type Props = {
   onRun: () => void

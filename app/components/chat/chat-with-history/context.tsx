@@ -3,13 +3,12 @@
 import type { RefObject } from 'react'
 import { createContext, useContext } from 'use-context-selector'
 import { noop } from 'lodash-es'
-// import type {
-//   Callback,
-//   ChatConfig,
-//   ChatItemInTree,
-// Feedback,
-// } from '../types'
-
+import type {
+  Callback,
+  ChatConfig,
+  ChatItemInTree,
+  Feedback,
+} from '../types'
 import type { ThemeBuilder } from '../embedded-chatbot/theme/theme-context'
 import type {
   AppConversationData,
@@ -23,11 +22,11 @@ export type ChatWithHistoryContextValue = {
   appInfoLoading?: boolean
   appMeta?: AppMeta
   appData?: AppData
-  appParams?: any
+  appParams?: ChatConfig
   appChatListDataLoading?: boolean
   currentConversationId: string
   currentConversationItem?: ConversationItem
-  appPrevChatTree: any[]
+  appPrevChatTree: ChatItemInTree[]
   pinnedConversationList: AppConversationData['data']
   conversationList: AppConversationData['data']
   newConversationInputs: Record<string, any>
@@ -39,15 +38,15 @@ export type ChatWithHistoryContextValue = {
   handleChangeConversation: (conversationId: string) => void
   handlePinConversation: (conversationId: string) => void
   handleUnpinConversation: (conversationId: string) => void
-  handleDeleteConversation: (conversationId: string, callback: any) => void
+  handleDeleteConversation: (conversationId: string, callback: Callback) => void
   conversationRenaming: boolean
-  handleRenameConversation: (conversationId: string, newName: string, callback: any) => void
+  handleRenameConversation: (conversationId: string, newName: string, callback: Callback) => void
   handleNewConversationCompleted: (newConversationId: string) => void
   chatShouldReloadKey: string
   isMobile: boolean
   isInstalledApp: boolean
   appId?: string
-  handleFeedback: (messageId: string, feedback: any) => void
+  handleFeedback: (messageId: string, feedback: Feedback) => void
   currentChatInstanceRef: RefObject<{ handleStop: () => void }>
   themeBuilder?: ThemeBuilder
   sidebarCollapseState?: boolean
@@ -92,4 +91,6 @@ export const ChatWithHistoryContext = createContext<ChatWithHistoryContextValue>
   currentConversationInputs: {},
   setCurrentConversationInputs: noop,
 })
+// export const ChatWithHistoryContext = createContext<any | undefined>(undefined)
+
 export const useChatWithHistoryContext = () => useContext(ChatWithHistoryContext)

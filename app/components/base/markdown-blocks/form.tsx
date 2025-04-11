@@ -6,7 +6,7 @@ import DatePicker from '@/app/components/base/date-and-time-picker/date-picker'
 import TimePicker from '@/app/components/base/date-and-time-picker/time-picker'
 import Checkbox from '@/app/components/base/checkbox'
 import Select from '@/app/components/base/select'
-import { useChatContext } from '@/app/components/base/chat/chat/context'
+import { useChatContext } from '@/app/components/chat/chat/context'
 
 enum DATA_FORMAT {
   TEXT = 'text',

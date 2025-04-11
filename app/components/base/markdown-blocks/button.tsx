@@ -1,4 +1,4 @@
-import { useChatContext } from '@/app/components/base/chat/chat/context'
+import { useChatContext } from '@/app/components/chat/chat/context'
 import Button from '@/app/components/base/button'
 import cn from '@/utils/classnames'
 

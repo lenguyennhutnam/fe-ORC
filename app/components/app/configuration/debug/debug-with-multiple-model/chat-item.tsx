@@ -14,7 +14,7 @@ import {
   useFormattingChangedSubscription,
 } from '../hooks'
 import Chat from '@/app/components/base/chat/chat'
-import { useChat } from '@/app/components/base/chat/chat/hooks'
+import { useChat } from '@/app/components/chat/chat/hooks'
 import { useDebugConfigurationContext } from '@/context/debug-configuration'
 import type { ChatConfig, OnSend } from '@/app/components/base/chat/types'
 import { useEventEmitterContextContext } from '@/context/event-emitter'
@@ -28,7 +28,7 @@ import Avatar from '@/app/components/base/avatar'
 import { useAppContext } from '@/context/app-context'
 import { ModelFeatureEnum } from '@/app/components/header/account-setting/model-provider-page/declarations'
 import { useFeatures } from '@/app/components/base/features/hooks'
-import type { InputForm } from '@/app/components/base/chat/chat/type'
+import type { InputForm } from '@/app/components/chat/chat/type'
 import { getLastAnswer } from '@/app/components/base/chat/utils'
 import { canFindTool } from '@/utils'
 

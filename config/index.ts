@@ -10,6 +10,8 @@ export const APP_INFO: AppInfo = {
   default_language: 'en',
 }
 
+export const MAX_TOOLS_NUM = 10
+
 export const isShowPrompt = false
 export const promptTemplate = 'I want you to act as a javascript console.'
 

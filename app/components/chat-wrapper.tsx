@@ -5,16 +5,15 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 //   ChatItemInTree,
 //   OnSend,
 // } from '../types'
-// import { getLastAnswer, isValidGeneratedAnswer } from '../utils'
-import { getLastAnswer, isValidGeneratedAnswer } from './base/chat/utils'
-import { useChat } from './chat/hooks'
+import { useChat } from './chat/chat/hooks'
+import { getLastAnswer, isValidGeneratedAnswer } from '@/app/components/chat/utils'
 // import { useChatWithHistoryContext } from './context'
 import { useChatWithHistoryContext } from '@/app/components/chat/chat-with-history/context'
 // import {useChat}
-import Chat from '@/app/components/chat/index'
+import Chat from '@/app/components/chat/chat'
 import { InputVarType } from '@/app/components/workflow/types'
 import { TransferMethod } from '@/types/app'
-import InputsForm from '@/app/components/base/chat/chat-with-history/inputs-form'
+import InputsForm from '@/app/components/chat/chat-with-history/inputs-form'
 import {
   fetchSuggestedQuestions,
   getUrl,
@@ -22,12 +21,11 @@ import {
 } from '@/service/share'
 import AppIcon from '@/app/components/base/app-icon'
 import AnswerIcon from '@/app/components/base/answer-icon'
-import SuggestedQuestions from '@/app/components/base/chat/chat/answer/suggested-questions'
+import SuggestedQuestions from '@/app/components/chat/chat/answer/suggested-questions'
 import { Markdown } from '@/app/components/base/markdown'
 import cn from '@/utils/classnames'
 
 const ChatWrapper = () => {
-  console.log(456)
   const {
     appParams,
     appPrevChatTree,

@@ -17,11 +17,11 @@ import type {
   ChatItemInTree,
   Inputs,
 } from '@/app/components/base/chat/types'
-import type { InputForm } from '@/app/components/base/chat/chat/type'
+import type { InputForm } from '@/app/components/chat/chat/type'
 import {
   getProcessedInputs,
   processOpeningStatement,
-} from '@/app/components/base/chat/chat/utils'
+} from '@/app/components/chat/chat/utils'
 import { useToastContext } from '@/app/components/base/toast'
 import { TransferMethod } from '@/types/app'
 import {

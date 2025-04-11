@@ -12,12 +12,12 @@ import {
 } from './context'
 import type { DebugWithMultipleModelContextType } from './context'
 import { useEventEmitterContextContext } from '@/context/event-emitter'
-import ChatInputArea from '@/app/components/base/chat/chat/chat-input-area'
+import ChatInputArea from '@/app/components/chat/chat/chat-input-area'
 import { useDebugConfigurationContext } from '@/context/debug-configuration'
 import { useFeatures } from '@/app/components/base/features/hooks'
 import { useStore as useAppStore } from '@/app/components/app/store'
 import type { FileEntity } from '@/app/components/base/file-uploader/types'
-import type { InputForm } from '@/app/components/base/chat/chat/type'
+import type { InputForm } from '@/app/components/chat/chat/type'
 
 const DebugWithMultipleModel = () => {
   const {

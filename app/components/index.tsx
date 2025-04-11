@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import produce, { setAutoFreeze } from 'immer'
 import { useBoolean, useGetState } from 'ahooks'
-import ChatWithHistory from '@/app/components/base/chat/chat-with-history/index'
+import ChatWithHistory from '@/app/components/chat/chat-with-history/index'
 import { useChatWithHistoryContext } from '@/app/components/chat/chat-with-history/context'
 import useConversation from '@/hooks/use-conversation'
 import Toast from '@/app/components/base/toast'
@@ -346,7 +346,7 @@ const Main: FC<IMainProps> = () => {
 
   const handleSend = async (message: string, files?: VisionFile[]) => {
     if (isResponding) {
-      notify({ type: 'info', message: t('common.errorMessage.waitForResponse') })
+      Toast.notify({ type: 'info', message: t('common.errorMessage.waitForResponse') })
       return
     }
     const data: Record<string, any> = {
@@ -639,7 +639,7 @@ const Main: FC<IMainProps> = () => {
     is_pinned: false,
   }
   return (
-    <ChatWithHistory installedAppInfo={installedApp} className='overflow-hidden rounded-2xl shadow-md' />
+    <ChatWithHistory themeBuilder={themeBuilder} installedAppInfo={installedApp} className='overflow-hidden rounded-2xl shadow-md' />
     // <div className='bg-gray-100'>
     //   <Header
     //     title={APP_INFO.title}

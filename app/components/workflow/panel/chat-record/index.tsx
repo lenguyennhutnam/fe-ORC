@@ -17,7 +17,7 @@ import { fetchConversationMessages } from '@/service/debug'
 import { useStore as useAppStore } from '@/app/components/app/store'
 import Loading from '@/app/components/base/loading'
 import { getProcessedFilesFromResponse } from '@/app/components/base/file-uploader/utils'
-import type { IChatItem } from '@/app/components/base/chat/chat/type'
+import type { IChatItem } from '@/app/components/chat/chat/type'
 import { buildChatItemTree, getThreadMessages } from '@/app/components/base/chat/utils'
 
 function getFormattedChatList(messages: any[]) {

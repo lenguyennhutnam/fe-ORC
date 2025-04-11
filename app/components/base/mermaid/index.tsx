@@ -4,7 +4,7 @@ import { usePrevious } from 'ahooks'
 import { useTranslation } from 'react-i18next'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import { cleanUpSvgCode } from './utils'
-import LoadingAnim from '@/app/components/base/chat/chat/loading-anim'
+import LoadingAnim from '@/app/components/chat/chat/loading-anim'
 import cn from '@/utils/classnames'
 import ImagePreview from '@/app/components/base/image-uploader/image-preview'
 

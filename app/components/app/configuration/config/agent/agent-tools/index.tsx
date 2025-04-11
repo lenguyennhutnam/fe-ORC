@@ -20,9 +20,7 @@ import Indicator from '@/app/components/header/indicator'
 import Switch from '@/app/components/base/switch'
 import Toast from '@/app/components/base/toast'
 import ConfigContext from '@/context/debug-configuration'
-import type { AgentTool } from '@/types/app'
 import { type Collection, CollectionType } from '@/app/components/tools/types'
-import { MAX_TOOLS_NUM } from '@/config'
 import { AlertTriangle } from '@/app/components/base/icons/src/vender/solid/alertsAndFeedback'
 import Tooltip from '@/app/components/base/tooltip'
 import { DefaultToolIcon } from '@/app/components/base/icons/src/public/other'
@@ -32,8 +30,9 @@ import cn from '@/utils/classnames'
 import ToolPicker from '@/app/components/workflow/block-selector/tool-picker'
 import type { ToolDefaultValue } from '@/app/components/workflow/block-selector/types'
 import { canFindTool } from '@/utils'
+import { MAX_TOOLS_NUM } from '@/config'
 
-type AgentToolWithMoreInfo = AgentTool & { icon: any; collection?: Collection } | null
+type AgentToolWithMoreInfo = any & { icon: any; collection?: Collection } | null
 const AgentTools: FC = () => {
   const { t } = useTranslation()
   const [isShowChooseTool, setIsShowChooseTool] = useState(false)
@@ -42,13 +41,14 @@ const AgentTools: FC = () => {
 
   const [currentTool, setCurrentTool] = useState<AgentToolWithMoreInfo>(null)
   const currentCollection = useMemo(() => {
-    if (!currentTool) return null
+    if (!currentTool)
+      return null
     const collection = collectionList.find(collection => canFindTool(collection.id, currentTool?.provider_id) && collection.type === currentTool?.provider_type)
     return collection
   }, [currentTool, collectionList])
   const [isShowSettingTool, setIsShowSettingTool] = useState(false)
   const [isShowSettingAuth, setShowSettingAuth] = useState(false)
-  const tools = (modelConfig?.agentConfig?.tools as AgentTool[] || []).map((item) => {
+  const tools = (modelConfig?.agentConfig?.tools as any[] || []).map((item) => {
     const collection = collectionList.find(
       collection =>
         canFindTool(collection.id, item.provider_id)
@@ -66,7 +66,7 @@ const AgentTools: FC = () => {
     const newModelConfig = produce(modelConfig, (draft) => {
       const tool = (draft.agentConfig.tools).find((item: any) => item.provider_id === currentTool?.collection?.id && item.tool_name === currentTool?.tool_name)
       if (tool)
-        (tool as AgentTool).tool_parameters = value
+        (tool as any).tool_parameters = value
     })
     setModelConfig(newModelConfig)
     setIsShowSettingTool(false)
@@ -77,7 +77,7 @@ const AgentTools: FC = () => {
     const newModelConfig = produce(modelConfig, (draft) => {
       const tool = (draft.agentConfig.tools).find((item: any) => item.provider_id === value?.collection?.id && item.tool_name === value?.tool_name)
       if (tool)
-        (tool as AgentTool).notAuthor = false
+        (tool as any).notAuthor = false
     })
     setModelConfig(newModelConfig)
     setIsShowSettingTool(false)
@@ -140,7 +140,7 @@ const AgentTools: FC = () => {
         }
       >
         <div className='grid grid-cols-1 flex-wrap items-center justify-between gap-1 2xl:grid-cols-2'>
-          {tools.map((item: AgentTool & { icon: any; collection?: Collection }, index) => (
+          {tools.map((item: any & { icon: any; collection?: Collection }, index) => (
             <div key={index}
               className={cn(
                 'cursor group relative flex w-full items-center justify-between rounded-lg border-[0.5px] border-components-panel-border-subtle bg-components-panel-on-panel-item-bg p-1.5 pr-2 shadow-xs last-of-type:mb-0 hover:bg-components-panel-on-panel-item-bg-hover hover:shadow-sm',

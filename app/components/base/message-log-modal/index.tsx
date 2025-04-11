@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useClickAway } from 'ahooks'
 import { RiCloseLine } from '@remixicon/react'
 import cn from '@/utils/classnames'
-import type { IChatItem } from '@/app/components/base/chat/chat/type'
+import type { IChatItem } from '@/app/components/chat/chat/type'
 import Run from '@/app/components/workflow/run'
 
 type MessageLogModalProps = {

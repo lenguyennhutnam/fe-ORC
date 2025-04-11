@@ -4,7 +4,7 @@ import {
   useFormattingChangedSubscription,
 } from '../hooks'
 import Chat from '@/app/components/base/chat/chat'
-import { useChat } from '@/app/components/base/chat/chat/hooks'
+import { useChat } from '@/app/components/chat/chat/hooks'
 import { useDebugConfigurationContext } from '@/context/debug-configuration'
 import type { ChatConfig, ChatItem, ChatItemInTree, OnSend } from '@/app/components/base/chat/types'
 import { useProviderContext } from '@/context/provider-context'
@@ -19,7 +19,7 @@ import { ModelFeatureEnum } from '@/app/components/header/account-setting/model-
 import { useStore as useAppStore } from '@/app/components/app/store'
 import { useFeatures } from '@/app/components/base/features/hooks'
 import { getLastAnswer, isValidGeneratedAnswer } from '@/app/components/base/chat/utils'
-import type { InputForm } from '@/app/components/base/chat/chat/type'
+import type { InputForm } from '@/app/components/chat/chat/type'
 import { canFindTool } from '@/utils'
 
 type DebugWithSingleModelProps = {

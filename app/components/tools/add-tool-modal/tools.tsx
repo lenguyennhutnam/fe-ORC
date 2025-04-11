@@ -3,30 +3,22 @@ import {
   useCallback,
 } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  RiAddLine,
-} from '@remixicon/react'
-import cn from '@/utils/classnames'
+
 import { ArrowUpRight } from '@/app/components/base/icons/src/vender/line/arrows'
-import { Check } from '@/app/components/base/icons/src/vender/line/general'
-import { Tag01 } from '@/app/components/base/icons/src/vender/line/financeAndECommerce'
 import type { ToolWithProvider } from '@/app/components/workflow/types'
-import { BlockEnum } from '@/app/components/workflow/types'
-import BlockIcon from '@/app/components/workflow/block-icon'
-import Tooltip from '@/app/components/base/tooltip'
-import Button from '@/app/components/base/button'
+// import BlockIcon from '@/app/components/workflow/block-icon'
 import { useGetLanguage } from '@/context/i18n'
-import { useStore as useLabelStore } from '@/app/components/tools/labels/store'
+// import { useStore as useLabelStore } from '@/app/components/tools/labels/store'
 import Empty from '@/app/components/tools/add-tool-modal/empty'
 import type { Tool } from '@/app/components/tools/types'
 import { CollectionType } from '@/app/components/tools/types'
-import type { AgentTool } from '@/types/app'
+// import type { AgentTool } from '@/types/app'
 import { MAX_TOOLS_NUM } from '@/config'
 
 type ToolsProps = {
   showWorkflowEmpty: boolean
   tools: ToolWithProvider[]
-  addedTools: AgentTool[]
+  addedTools: any[]
   onSelect: (provider: ToolWithProvider, tool: Tool) => void
   onAuthSetup: (provider: ToolWithProvider) => void
 }
@@ -39,7 +31,7 @@ const Blocks = ({
 }: ToolsProps) => {
   const { t } = useTranslation()
   const language = useGetLanguage()
-  const labelList = useLabelStore(s => s.labelList)
+  // const labelList = useLabelStore((s: any) => s.labelList)
   const addable = addedTools.length < MAX_TOOLS_NUM
 
   const renderGroup = useCallback((toolWithProvider: ToolWithProvider) => {
@@ -55,11 +47,11 @@ const Blocks = ({
           {toolWithProvider.label[language]}
           <a className='hidden cursor-pointer items-center group-hover:flex' href={`/tools?category=${toolWithProvider.type}`} target='_blank'>{t('tools.addToolModal.manageInTools')}<ArrowUpRight className='ml-0.5 h-3 w-3' /></a>
         </div>
-        {list.map((tool) => {
+        {/* {list.map((tool: any) => {
           const labelContent = (() => {
             if (!tool.labels)
               return ''
-            return tool.labels.map((name) => {
+            return tool.labels.map((name: any) => {
               const label = labelList.find(item => item.name === name)
               return label?.label[language]
             }).filter(Boolean).join(', ')
@@ -126,10 +118,10 @@ const Blocks = ({
               </div>
             </Tooltip>
           )
-        })}
+        })} */}
       </div>
     )
-  }, [addable, language, t, labelList, addedTools, onAuthSetup, onSelect])
+  }, [addable, language, t, addedTools, onAuthSetup, onSelect])
 
   return (
     <div className='max-w-[440px] p-1 pb-6'>
