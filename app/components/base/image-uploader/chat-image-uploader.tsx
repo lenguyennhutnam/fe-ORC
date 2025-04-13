@@ -71,7 +71,6 @@ const UploaderButton: FC<UploaderButtonProps> = ({
 
     setOpen(v => !v)
   }
-
   return (
     <PortalToFollowElem
       open={open}

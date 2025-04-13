@@ -35,7 +35,6 @@ const InputsFormContent = ({ showTip }: Props) => {
       [variable]: value,
     })
   }, [newConversationInputsRef, handleNewConversationInputsChange, currentConversationInputs, setCurrentConversationInputs])
-
   return (
     <div className='space-y-4'>
       {inputsForms.map(form => (

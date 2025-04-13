@@ -38,3 +38,51 @@ export const ANNOTATION_DEFAULT = {
 }
 
 export const maxToolsNum = 10
+
+export const MAX_VAR_KEY_LENGTH = 30
+
+export const VAR_ITEM_TEMPLATE = {
+  key: '',
+  name: '',
+  type: 'string',
+  max_length: DEFAULT_VALUE_MAX_LEN,
+  required: true,
+}
+
+export enum InputVarType {
+  textInput = 'text-input',
+  paragraph = 'paragraph',
+  select = 'select',
+  number = 'number',
+  url = 'url',
+  files = 'files',
+  json = 'json', // obj, array
+  contexts = 'contexts', // knowledge retrieval
+  iterator = 'iterator', // iteration input
+  singleFile = 'file',
+  multiFiles = 'file-list',
+  loop = 'loop', // loop input
+}
+
+export const VAR_ITEM_TEMPLATE_IN_WORKFLOW = {
+  variable: '',
+  label: '',
+  type: InputVarType.textInput,
+  max_length: DEFAULT_VALUE_MAX_LEN,
+  required: true,
+  options: [],
+}
+
+export const zhRegex = /^[\u4E00-\u9FA5]$/m
+export const emojiRegex = /^[\uD800-\uDBFF][\uDC00-\uDFFF]$/m
+export const emailRegex = /^[\w.!#$%&'*+\-/=?^{|}~]+@([\w-]+\.)+[\w-]{2,}$/m
+const MAX_ZN_VAR_NAME_LENGTH = 8
+const MAX_EN_VAR_VALUE_LENGTH = 30
+
+export const MAX_PROMPT_MESSAGE_LENGTH = 10
+export const getMaxVarNameLength = (value: string) => {
+  if (zhRegex.test(value))
+    return MAX_ZN_VAR_NAME_LENGTH
+
+  return MAX_EN_VAR_VALUE_LENGTH
+}

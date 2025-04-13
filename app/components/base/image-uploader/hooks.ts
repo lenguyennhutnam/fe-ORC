@@ -3,7 +3,7 @@ import type { ClipboardEvent } from 'react'
 import { useParams } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
 import { imageUpload } from './utils'
-import { useToastContext } from '@/app/components/base/toast'
+import Toast, { useToastContext } from '@/app/components/base/toast'
 import { ALLOW_FILE_EXTENSIONS, TransferMethod } from '@/types/app'
 import type { ImageFile, VisionSettings } from '@/types/app'
 
@@ -15,6 +15,7 @@ export const useImageFiles = () => {
   const filesRef = useRef<ImageFile[]>([])
 
   const handleUpload = (imageFile: ImageFile) => {
+    console.log('handleUpload file')
     const files = filesRef.current
     const index = files.findIndex(file => file._id === imageFile._id)
 
@@ -123,6 +124,7 @@ export const useLocalFileUploader = ({ limit, disabled = false, onUpload }: useL
   const { t } = useTranslation()
 
   const handleLocalFileUpload = useCallback((file: File) => {
+    console.log('handleLocalFileUpload')
     if (disabled) {
       // TODO: leave some warnings?
       return

@@ -23,7 +23,7 @@ import {
   useFileStore,
 } from '@/app/components/base/file-uploader/store'
 import VoiceInput from '@/app/components/base/voice-input'
-import { useToastContext } from '@/app/components/base/toast'
+import Toast from '@/app/components/base/toast'
 import FeatureBar from '@/app/components/base/features/new-feature-panel/feature-bar'
 import type { FileUpload } from '@/app/components/base/features/types'
 import { TransferMethod } from '@/types/app'
@@ -57,7 +57,6 @@ const ChatInputArea = ({
   disabled,
 }: ChatInputAreaProps) => {
   const { t } = useTranslation()
-  const { notify } = useToastContext()
   const {
     wrapperRef,
     textareaRef,
@@ -83,18 +82,18 @@ const ChatInputArea = ({
   const isComposingRef = useRef(false)
   const handleSend = () => {
     if (isResponding) {
-      notify({ type: 'info', message: t('appDebug.errorMessage.waitForResponse') })
+      Toast.notify({ type: 'info', message: t('appDebug.errorMessage.waitForResponse') })
       return
     }
 
     if (onSend) {
       const { files, setFiles } = filesStore.getState()
       if (files.find(item => item.transferMethod === TransferMethod.local_file && !item.uploadedId)) {
-        notify({ type: 'info', message: t('appDebug.errorMessage.waitForFileUpload') })
+        Toast.notify({ type: 'info', message: t('appDebug.errorMessage.waitForFileUpload') })
         return
       }
       if (!query || !query.trim()) {
-        notify({ type: 'info', message: t('appAnnotation.errorMessage.queryRequired') })
+        Toast.notify({ type: 'info', message: t('appAnnotation.errorMessage.queryRequired') })
         return
       }
       if (checkInputsForm(inputs, inputsForm)) {
@@ -118,7 +117,8 @@ const ChatInputArea = ({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
       // if isComposing, exit
-      if (isComposingRef.current) return
+      if (isComposingRef.current)
+        return
       e.preventDefault()
       setQuery(query.replace(/\n$/, ''))
       historyRef.current.push(query)
@@ -150,9 +150,9 @@ const ChatInputArea = ({
     (Recorder as any).getPermission().then(() => {
       setShowVoiceInput(true)
     }, () => {
-      notify({ type: 'error', message: t('common.voiceInput.notAllow') })
+      Toast.notify({ type: 'error', message: t('common.voiceInput.notAllow') })
     })
-  }, [t, notify])
+  }, [t])
 
   const operation = (
     <Operation

@@ -1,10 +1,10 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { useChatWithHistoryContext } from '../context'
 import { Message3Fill } from '@/app/components/base/icons/src/public/other'
 import Button from '@/app/components/base/button'
 import Divider from '@/app/components/base/divider'
 import InputsFormContent from '@/app/components/chat/chat-with-history/inputs-form/content'
-import { useChatWithHistoryContext } from '../context'
 import cn from '@/utils/classnames'
 
 type Props = {
@@ -44,6 +44,7 @@ const InputsFormNode = ({
             <Button className='uppercase text-text-tertiary' size='small' variant='ghost' onClick={() => setCollapsed(true)}>{t('common.operation.close')}</Button>
           )}
         </div>
+        {/* Form input */}
         {!collapsed && (
           <div className={cn('p-6', isMobile && 'p-4')}>
             <InputsFormContent />
@@ -51,6 +52,7 @@ const InputsFormNode = ({
         )}
         {!collapsed && !currentConversationId && (
           <div className={cn('p-6', isMobile && 'p-4')}>
+            {/* needcheck, nut bat dau */}
             <Button
               variant='primary'
               className='w-full'

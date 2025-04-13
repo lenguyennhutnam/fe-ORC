@@ -50,7 +50,7 @@ export const fetchChatList = async (conversationId: string) => {
 }
 
 const getMethod = async (url: string) => {
-  console.log(`https://api.dify.ai/v1/${url}`)
+  console.log(`Bearer ${process.env.NEXT_PUBLIC_APP_KEY}`)
   const res = await fetch(`https://api.dify.ai/v1/${url}`, {
     method: 'GET',
     headers: {
@@ -83,7 +83,6 @@ export const fetchConversations = async () => {
   })
 
   const data = await res.json()
-  console.log(data)
   // return get('conversations', { params: { limit: 100, first_id: '' } })
   // const res = await getMethod(`conversations?user=${user || '2b9635a4-f466-42dc-8a9f-dbb0fdefa6e3'}&last_id=${last_id || ''}&limit=${limit || 20}`)
   return data

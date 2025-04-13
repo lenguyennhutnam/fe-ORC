@@ -242,8 +242,6 @@ const Main: FC<IMainProps> = () => {
     (async () => {
       try {
         const [conversationData, appParams] = await Promise.all([fetchConversations(), fetchAppParams()])
-        console.log(appParams)
-        console.log(22222222)
         // handle current conversation id
         const { data: conversations, error } = conversationData as { data: ConversationItem[]; error: string }
         if (error) {
@@ -314,12 +312,12 @@ const Main: FC<IMainProps> = () => {
     return true
   }
 
-  // const [controlFocus, setControlFocus] = useState(0)
-  // const [openingSuggestedQuestions, setOpeningSuggestedQuestions] = useState<string[]>([])
-  // const [messageTaskId, setMessageTaskId] = useState('')
-  // const [hasStopResponded, setHasStopResponded, getHasStopResponded] = useGetState(false)
-  // const [isRespondingConIsCurrCon, setIsRespondingConCurrCon, getIsRespondingConIsCurrCon] = useGetState(true)
-  // const [userQuery, setUserQuery] = useState('')
+  const [controlFocus, setControlFocus] = useState(0)
+  const [openingSuggestedQuestions, setOpeningSuggestedQuestions] = useState<string[]>([])
+  const [messageTaskId, setMessageTaskId] = useState('')
+  const [hasStopResponded, setHasStopResponded, getHasStopResponded] = useGetState(false)
+  const [isRespondingConIsCurrCon, setIsRespondingConCurrCon, getIsRespondingConIsCurrCon] = useGetState(true)
+  const [userQuery, setUserQuery] = useState('')
 
   const updateCurrentQA = ({
     responseItem,
@@ -365,8 +363,8 @@ const Main: FC<IMainProps> = () => {
         return item
       })
     }
-    if (!visionConfig?.enabled)
-      console.log(data)
+    // if (!visionConfig?.enabled)
+    //   console.log(data)
 
     // question
     const questionId = `question-${Date.now()}`
@@ -639,7 +637,7 @@ const Main: FC<IMainProps> = () => {
     is_pinned: false,
   }
   return (
-    <ChatWithHistory themeBuilder={themeBuilder} installedAppInfo={installedApp} className='overflow-hidden rounded-2xl shadow-md' />
+    <ChatWithHistory installedAppInfo={installedApp} className='overflow-hidden rounded-2xl shadow-md' />
     // <div className='bg-gray-100'>
     //   <Header
     //     title={APP_INFO.title}

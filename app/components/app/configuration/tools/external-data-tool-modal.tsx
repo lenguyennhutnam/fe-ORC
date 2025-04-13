@@ -3,6 +3,7 @@ import { useState } from 'react'
 import useSWR from 'swr'
 import { useContext } from 'use-context-selector'
 import { useTranslation } from 'react-i18next'
+import { noop } from 'lodash-es'
 import FormGeneration from '@/app/components/base/features/new-feature-panel/moderation/form-generation'
 import Modal from '@/app/components/base/modal'
 import Button from '@/app/components/base/button'
@@ -17,9 +18,8 @@ import type {
   CodeBasedExtensionItem,
   ExternalDataTool,
 } from '@/models/common'
-import { useToastContext } from '@/app/components/base/toast'
+import Toast, { useToastContext } from '@/app/components/base/toast'
 import AppIcon from '@/app/components/base/app-icon'
-import { noop } from 'lodash-es'
 
 const systemTypes = ['api']
 type ExternalDataToolModalProps = {

@@ -1,10 +1,9 @@
 import { create } from 'zustand'
-import type { IChatItem } from '@/app/components/chat/type'
 
 type State = {
   appDetail?: any
   appSidebarExpand: string
-  currentLogItem?: IChatItem
+  currentLogItem?: any
   currentLogModalActiveTab: string
   showPromptLogModal: boolean
   showAgentLogModal: boolean
@@ -15,7 +14,7 @@ type State = {
 type Action = {
   setAppDetail: (appDetail?: any) => void
   setAppSiderbarExpand: (state: string) => void
-  setCurrentLogItem: (item?: IChatItem) => void
+  setCurrentLogItem: (item?: any) => void
   setCurrentLogModalActiveTab: (tab: string) => void
   setShowPromptLogModal: (showPromptLogModal: boolean) => void
   setShowAgentLogModal: (showAgentLogModal: boolean) => void

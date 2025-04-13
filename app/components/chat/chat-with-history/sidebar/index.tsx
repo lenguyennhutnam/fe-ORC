@@ -112,7 +112,7 @@ const Sidebar = ({ isPanel }: Props) => {
         </Button>
       </div>
       <div className='h-0 grow space-y-2 overflow-y-auto px-3 pt-4'>
-        {/* pinned list */}
+        {/* pinned list
         {!!pinnedConversationList.length && (
           <div className='mb-4'>
             <List
@@ -124,7 +124,7 @@ const Sidebar = ({ isPanel }: Props) => {
               currentConversationId={currentConversationId}
             />
           </div>
-        )}
+        )} */}
         {!!conversationList.length && (
           <List
             title={(pinnedConversationList.length && t('share.chat.unpinnedTitle')) || ''}

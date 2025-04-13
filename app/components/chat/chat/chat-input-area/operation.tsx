@@ -1,6 +1,5 @@
-import { memo } from 'react'
+import React, { memo } from 'react'
 import {
-  RiMicLine,
   RiSendPlane2Fill,
 } from '@remixicon/react'
 import type {
@@ -8,10 +7,7 @@ import type {
 } from '../../types'
 import type { Theme } from '../../embedded-chatbot/theme/theme-context'
 import Button from '@/app/components/base/button'
-import ActionButton from '@/app/components/base/action-button'
-import { FileUploaderInChatInput } from '@/app/components/base/file-uploader'
 import type { FileUpload } from '@/app/components/base/features/types'
-import cn from '@/utils/classnames'
 
 type OperationProps = {
   fileConfig?: FileUpload
@@ -20,29 +16,20 @@ type OperationProps = {
   onSend: () => void
   theme?: Theme | null
 }
-const Operation = (
-  {
-    ref,
-    fileConfig,
-    speechToTextConfig,
-    onShowVoiceInput,
-    onSend,
-    theme,
-  }: OperationProps & {
-    ref: React.RefObject<HTMLDivElement>;
-  },
-) => {
+const Operation = React.forwardRef<HTMLDivElement, OperationProps>(({
+  fileConfig,
+  speechToTextConfig,
+  onShowVoiceInput,
+  onSend,
+  theme,
+}, ref) => {
   return (
-    <div
-      className={cn(
-        'flex shrink-0 items-center justify-end',
-      )}
-    >
+    <div className='flex shrink-0 items-center justify-end'>
       <div
         className='flex items-center pl-1'
         ref={ref}
       >
-        <div className='flex items-center space-x-1'>
+        {/* <div className='flex items-center space-x-1'>
           {fileConfig?.enabled && <FileUploaderInChatInput fileConfig={fileConfig} />}
           {
             speechToTextConfig?.enabled && (
@@ -54,25 +41,19 @@ const Operation = (
               </ActionButton>
             )
           }
-        </div>
+        </div> */}
         <Button
           className='ml-3 w-8 px-0'
           variant='primary'
           onClick={onSend}
-          style={
-            theme
-              ? {
-                backgroundColor: theme.primaryColor,
-              }
-              : {}
-          }
+          style={theme ? { backgroundColor: theme.primaryColor } : {}}
         >
           <RiSendPlane2Fill className='h-4 w-4' />
         </Button>
       </div>
     </div>
   )
-}
+})
 Operation.displayName = 'Operation'
 
 export default memo(Operation)

@@ -11,11 +11,10 @@ const FileInput = ({
   fileConfig,
 }: FileInputProps) => {
   const files = useStore(s => s.files)
-  console.log(fileConfig)
   const { handleLocalFileUpload } = useFile(fileConfig)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const targetFiles = e.target.files
-
+    console.log(targetFiles)
     if (targetFiles) {
       if (fileConfig.number_limits) {
         for (let i = 0; i < targetFiles.length; i++) {

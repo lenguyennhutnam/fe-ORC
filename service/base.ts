@@ -1,6 +1,6 @@
 import { refreshAccessTokenOrRelogin } from './refresh-token'
-import type { FetchOptionType, ResponseError } from './fetch.ts'
-import { ContentType, base, baseOptions, getAccessToken } from './fetch'
+import type { ResponseError } from './fetch.ts'
+import { base, baseOptions } from './fetch'
 // import { API_PREFIX, IS_CE_EDITION, PUBLIC_API_PREFIX } from '@/config'
 import { API_PREFIX } from '@/config'
 import Toast from '@/app/components/base/toast'
@@ -287,21 +287,19 @@ const handleStream = (
 
 const baseFetch = base
 
-export const upload = (options: any, isPublicAPI?: boolean, url?: string, searchParams?: string): Promise<any> => {
-  const urlPrefix = isPublicAPI ? API_PREFIX : API_PREFIX
-  const token = getAccessToken(isPublicAPI)
+export const upload = (fetchOptions: any): Promise<any> => {
+  const urlPrefix = API_PREFIX
+  const urlWithPrefix = `${urlPrefix}/file-upload`
+
+  console.log(urlWithPrefix)
   const defaultOptions = {
     method: 'POST',
-    url: (url ? `${urlPrefix}${url}` : `${urlPrefix}/files/upload`) + (searchParams || ''),
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    url: `${urlWithPrefix}`,
     data: {},
   }
-  options = {
+  const options = {
     ...defaultOptions,
-    ...options,
-    headers: { ...defaultOptions.headers, ...options.headers },
+    ...fetchOptions,
   }
   return new Promise((resolve, reject) => {
     const xhr = options.xhr
@@ -310,11 +308,10 @@ export const upload = (options: any, isPublicAPI?: boolean, url?: string, search
       xhr.setRequestHeader(key, options.headers[key])
 
     xhr.withCredentials = true
-    xhr.responseType = 'json'
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4) {
-        if (xhr.status === 201)
-          resolve(xhr.response)
+        if (xhr.status === 200)
+          resolve({ id: xhr.response })
         else
           reject(xhr)
       }
@@ -322,15 +319,44 @@ export const upload = (options: any, isPublicAPI?: boolean, url?: string, search
     xhr.upload.onprogress = options.onprogress
     xhr.send(options.data)
   })
+  // const defaultOptions = {
+  //   method: 'POST',
+  //   url: ('https://api.dify.ai/v1/files/upload'),
+  //   headers: {
+  //     Authorization: `Bearer ${process.env.NEXT_PUBLIC_APP_KEY}`,
+  //   },
+  //   data: {},
+  // }
+  // options = {
+  //   ...defaultOptions,
+  //   ...options,
+  //   headers: { ...defaultOptions.headers, ...options.headers },
+  // }
+  // return new Promise((resolve, reject) => {
+  //   const xhr = options.xhr
+  //   xhr.open(options.method, options.url)
+  //   for (const key in options.headers)
+  //     xhr.setRequestHeader(key, options.headers[key])
+
+  //   xhr.withCredentials = true
+  //   xhr.responseType = 'json'
+  //   xhr.onreadystatechange = function () {
+  //     if (xhr.readyState === 4) {
+  //       if (xhr.status === 201)
+  //         resolve(xhr.response)
+  //       else
+  //         reject(xhr)
+  //     }
+  //   }
+  //   xhr.upload.onprogress = options.onprogress
+  //   xhr.send(options.data)
+  // })
 }
 
 export const ssePost = (
   url: string,
-  fetchOptions: FetchOptionType,
-  otherOptions: IOtherOptions,
-) => {
-  const {
-    isPublicAPI = false,
+  fetchOptions: any,
+  {
     onData,
     onCompleted,
     onThought,
@@ -341,119 +367,66 @@ export const ssePost = (
     onWorkflowFinished,
     onNodeStarted,
     onNodeFinished,
-    onIterationStart,
-    onIterationNext,
-    onIterationFinish,
-    onNodeRetry,
-    onParallelBranchStarted,
-    onParallelBranchFinished,
-    onTextChunk,
-    onTTSChunk,
-    onTTSEnd,
-    onTextReplace,
-    onAgentLog,
     onError,
-    getAbortController,
-    onLoopStart,
-    onLoopNext,
-    onLoopFinish,
-  } = otherOptions
-  const abortController = new AbortController()
-
-  const token = localStorage.getItem('console_token')
-
+  }: IOtherOptions,
+) => {
   const options = Object.assign({}, baseOptions, {
     method: 'POST',
-    signal: abortController.signal,
-    headers: new Headers({
-      Authorization: `Bearer ${token}`,
-    }),
-  } as RequestInit, fetchOptions)
-
-  const contentType = (options.headers as Headers).get('Content-Type')
-  if (!contentType)
-    (options.headers as Headers).set('Content-Type', ContentType.json)
-
-  getAbortController?.(abortController)
-
+  }, fetchOptions)
+  console.log(`ssePost: ${url}   ${baseOptions},   ${fetchOptions}`)
   const urlPrefix = API_PREFIX
-  const urlWithPrefix = (url.startsWith('http://') || url.startsWith('https://'))
-    ? url
-    : `${urlPrefix}${url.startsWith('/') ? url : `/${url}`}`
+  const urlWithPrefix = `${urlPrefix}${url.startsWith('/') ? url : `/${url}`}`
 
   const { body } = options
   if (body)
     options.body = JSON.stringify(body)
 
-  const accessToken = getAccessToken(isPublicAPI)
-  ;(options.headers as Headers).set('Authorization', `Bearer ${accessToken}`)
-
-  globalThis.fetch(urlWithPrefix, options as RequestInit)
-    .then((res) => {
-      if (!/^(2|3)\d{2}$/.test(String(res.status))) {
-        if (res.status === 401) {
-          refreshAccessTokenOrRelogin(TIME_OUT).then(() => {
-            ssePost(url, fetchOptions, otherOptions)
-          }).catch(() => {
-            res.json().then((data: any) => {
-              if (isPublicAPI) {
-                if (data.code === 'web_sso_auth_required')
-                  requiredWebSSOLogin()
-
-                if (data.code === 'unauthorized') {
-                  removeAccessToken()
-                  globalThis.location.reload()
-                }
-              }
-            })
-          })
-        }
-        else {
-          res.json().then((data) => {
-            Toast.Toast.notify({ type: 'error', message: data.message || 'Server Error' })
-          })
-          onError?.('Server Error')
-        }
-        return
-      }
-      return handleStream(res, (str: string, isFirstMessage: boolean, moreInfo: IOnDataMoreInfo) => {
-        if (moreInfo.errorMessage) {
-          onError?.(moreInfo.errorMessage, moreInfo.errorCode)
-          // TypeError: Cannot assign to read only property ... will happen in page leave, so it should be ignored.
-          if (moreInfo.errorMessage !== 'AbortError: The user aborted a request.' && !moreInfo.errorMessage.includes('TypeError: Cannot assign to read only property'))
-            Toast.Toast.notify({ type: 'error', message: moreInfo.errorMessage })
+  globalThis.fetch(urlWithPrefix, options)
+    .then(async (res: any) => {
+      if (!/^(2|3)\d{2}$/.test(res.status)) {
+        const contentLength = res.headers.get('content-length')
+        if (!contentLength || contentLength === '0') {
+          Toast.notify({ type: 'error', message: 'No content returned' })
+          onError?.('No content returned')
           return
         }
-        onData?.(str, isFirstMessage, moreInfo)
-      },
-      onCompleted,
-      onThought,
-      onMessageEnd,
-      onMessageReplace,
-      onFile,
-      onWorkflowStarted,
-      onWorkflowFinished,
-      onNodeStarted,
-      onNodeFinished,
-      onIterationStart,
-      onIterationNext,
-      onIterationFinish,
-      onLoopStart,
-      onLoopNext,
-      onLoopFinish,
-      onNodeRetry,
-      onParallelBranchStarted,
-      onParallelBranchFinished,
-      onTextChunk,
-      onTTSChunk,
-      onTTSEnd,
-      onTextReplace,
-      onAgentLog,
+
+        try {
+          const data = await res.json()
+          Toast.notify({ type: 'error', message: data.message || 'Server Error' })
+          onError?.(data.message || 'Server Error')
+        }
+        catch (err) {
+          Toast.notify({ type: 'error', message: 'Invalid JSON response' })
+          onError?.('Invalid JSON response')
+        }
+
+        return
+      }
+
+      return handleStream(
+        res,
+        (str: string, isFirstMessage: boolean, moreInfo: IOnDataMoreInfo) => {
+          if (moreInfo.errorMessage) {
+            Toast.notify({ type: 'error', message: moreInfo.errorMessage })
+            return
+          }
+          onData?.(str, isFirstMessage, moreInfo)
+        },
+        () => onCompleted?.(),
+        onThought,
+        onMessageEnd,
+        onMessageReplace,
+        onFile,
+        onWorkflowStarted,
+        onWorkflowFinished,
+        onNodeStarted,
+        onNodeFinished,
       )
-    }).catch((e) => {
-      if (e.toString() !== 'AbortError: The user aborted a request.' && !e.toString().errorMessage.includes('TypeError: Cannot assign to read only property'))
-        Toast.Toast.notify({ type: 'error', message: e })
-      onError?.(e)
+    })
+    .catch((e) => {
+      Toast.notify({ type: 'error', message: e.message || e })
+      onError?.(e.message || e)
     })
 }
 
@@ -496,7 +469,7 @@ export const request = async<T>(url: string, options = {}, otherOptions?: IOther
         return Promise.reject(err)
       }
       if (code === 'init_validate_failed' && !silent) {
-        Toast.Toast.notify({ type: 'error', message, duration: 4000 })
+        Toast.notify({ type: 'error', message, duration: 4000 })
         return Promise.reject(err)
       }
       if (code === 'not_init_validated') {
@@ -517,7 +490,7 @@ export const request = async<T>(url: string, options = {}, otherOptions?: IOther
         return Promise.reject(err)
       }
       if (!silent) {
-        Toast.Toast.notify({ type: 'error', message })
+        Toast.notify({ type: 'error', message })
         return Promise.reject(err)
       }
       globalThis.location.href = loginUrl

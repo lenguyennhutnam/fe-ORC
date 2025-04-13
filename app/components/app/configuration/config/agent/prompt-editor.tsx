@@ -4,6 +4,7 @@ import React from 'react'
 import copy from 'copy-to-clipboard'
 import { useContext } from 'use-context-selector'
 import { useTranslation } from 'react-i18next'
+import { noop } from 'lodash-es'
 import cn from '@/utils/classnames'
 import {
   Clipboard,
@@ -13,9 +14,8 @@ import PromptEditor from '@/app/components/base/prompt-editor'
 import type { ExternalDataTool } from '@/models/common'
 import ConfigContext from '@/context/debug-configuration'
 import { useModalContext } from '@/context/modal-context'
-import { useToastContext } from '@/app/components/base/toast'
+import Toast from '@/app/components/base/toast'
 import s from '@/app/components/app/configuration/config-prompt/style.module.css'
-import { noop } from 'lodash-es'
 
 type Props = {
   className?: string
@@ -31,8 +31,6 @@ const Editor: FC<Props> = ({
   onChange,
 }) => {
   const { t } = useTranslation()
-
-  const { notify } = useToastContext()
 
   const [isCopied, setIsCopied] = React.useState(false)
   const {

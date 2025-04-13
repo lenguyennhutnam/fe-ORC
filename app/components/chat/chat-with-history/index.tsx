@@ -119,7 +119,6 @@ const ChatWithHistoryWrap: FC<ChatWithHistoryWrapProps> = ({
   const media = useBreakpoints()
   const isMobile = media === MediaType.mobile
   const themeBuilder = useThemeContext()
-
   const {
     appInfoError,
     appInfoLoading,
@@ -158,7 +157,6 @@ const ChatWithHistoryWrap: FC<ChatWithHistoryWrapProps> = ({
     currentConversationInputs,
     setCurrentConversationInputs,
   } = useChatWithHistory(installedAppInfo)
-
   return (
     <ChatWithHistoryContext.Provider value={{
       appInfoError,

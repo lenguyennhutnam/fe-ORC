@@ -126,12 +126,12 @@ const ChatWrapper = () => {
       query: message,
       files,
       inputs: currentConversationId ? currentConversationInputs : newConversationInputs,
-      conversation_id: currentConversationId,
+      conversation_id: currentConversationId || null,
       parent_message_id: (isRegenerate ? parentAnswer?.id : getLastAnswer(chatList)?.id) || null,
     }
 
     handleSend(
-      getUrl('chat-messages', isInstalledApp, appId || ''),
+      getUrl('chat-messages'),
       data,
       {
         onGetSuggestedQuestions: responseItemId => fetchSuggestedQuestions(responseItemId, isInstalledApp, appId),

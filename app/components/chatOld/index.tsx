@@ -85,7 +85,6 @@ const Chat: FC<IChatProps> = ({
   } = useImageFiles()
 
   const handleSend = () => {
-    console.log(files)
     if (!valid() || (checkCanSend && !checkCanSend()))
       return
     onSend(query, files.filter(file => file.progress !== -1).map(fileItem => ({

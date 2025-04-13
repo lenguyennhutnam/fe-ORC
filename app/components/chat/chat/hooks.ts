@@ -309,6 +309,7 @@ export const useChat = (
         ttsUrl = `/apps/${params.appId}/text-to-audio`
     }
     const player = AudioPlayerManager.getInstance().getAudioPlayer(ttsUrl, ttsIsPublic, uuidV4(), 'none', 'none', (_: any): any => { })
+    console.log(url)
     ssePost(
       url,
       {
@@ -400,7 +401,7 @@ export const useChat = (
               )
               setSuggestQuestions(data)
             }
-            // eslint-disable-next-line unused-imports/no-unused-vars
+
             catch (e) {
               setSuggestQuestions([])
             }

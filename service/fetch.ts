@@ -41,7 +41,7 @@ const afterResponseErrorCode = (otherOptions: IOtherOptions): AfterResponseHook 
         case 403:
           bodyJson.then((data: ResponseError) => {
             if (!otherOptions.silent)
-              Toast.Toast.notify({ type: 'error', message: data.message })
+              Toast.notify({ type: 'error', message: data.message })
             if (data.code === 'already_setup')
               globalThis.location.href = `${globalThis.location.origin}/signin`
           })
@@ -52,7 +52,7 @@ const afterResponseErrorCode = (otherOptions: IOtherOptions): AfterResponseHook 
         default:
           bodyJson.then((data: ResponseError) => {
             if (!otherOptions.silent)
-              Toast.Toast.notify({ type: 'error', message: data.message })
+              Toast.notify({ type: 'error', message: data.message })
           })
           return Promise.reject(response)
       }
@@ -63,7 +63,7 @@ const afterResponseErrorCode = (otherOptions: IOtherOptions): AfterResponseHook 
 const beforeErrorToast = (otherOptions: IOtherOptions): BeforeErrorHook => {
   return (error: any) => {
     if (!otherOptions.silent)
-      Toast.Toast.notify({ type: 'error', message: error.message })
+      Toast.notify({ type: 'error', message: error.message })
     return error
   }
 }
@@ -108,8 +108,6 @@ const beforeRequestPublicAuthorization: any = (request: any) => {
 
 const beforeRequestAuthorization: any = (request: any) => {
   // const accessToken = getAccessToken()
-  // console.log('dmmm')
-  // console.log(accessToken)
   request.headers.set('Authorization', `Bearer ${process.env.NEXT_PUBLIC_APP_KEY}`)
 }
 

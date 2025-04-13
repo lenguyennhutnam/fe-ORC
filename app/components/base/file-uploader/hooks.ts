@@ -22,7 +22,7 @@ import {
   MAX_FILE_UPLOAD_LIMIT,
   VIDEO_SIZE_LIMIT,
 } from '@/app/components/base/file-uploader/constants'
-import { useToastContext } from '@/app/components/base/toast'
+import Toast, { useToastContext } from '@/app/components/base/toast'
 import { TransferMethod } from '@/types/app'
 import { SupportUploadFileTypes } from '@/app/components/workflow/types'
 import type { FileUpload } from '@/app/components/base/features/types'
@@ -47,7 +47,6 @@ export const useFileSizeLimit = (fileUploadConfig?: FileUploadConfigResponse) =>
 }
 
 export const useFile = (fileConfig: FileUpload) => {
-  console.log(fileConfig)
   const { t } = useTranslation()
   const { notify } = useToastContext()
   const fileStore = useFileStore()
@@ -58,7 +57,7 @@ export const useFile = (fileConfig: FileUpload) => {
     switch (fileType) {
       case SupportUploadFileTypes.image: {
         if (fileSize > imgSizeLimit) {
-          notify({
+          Toast.notify({
             type: 'error',
             message: t('common.fileUploader.uploadFromComputerLimit', {
               type: SupportUploadFileTypes.image,
@@ -71,7 +70,7 @@ export const useFile = (fileConfig: FileUpload) => {
       }
       case SupportUploadFileTypes.document: {
         if (fileSize > docSizeLimit) {
-          notify({
+          Toast.notify({
             type: 'error',
             message: t('common.fileUploader.uploadFromComputerLimit', {
               type: SupportUploadFileTypes.document,
@@ -84,7 +83,7 @@ export const useFile = (fileConfig: FileUpload) => {
       }
       case SupportUploadFileTypes.audio: {
         if (fileSize > audioSizeLimit) {
-          notify({
+          Toast.notify({
             type: 'error',
             message: t('common.fileUploader.uploadFromComputerLimit', {
               type: SupportUploadFileTypes.audio,
@@ -97,7 +96,7 @@ export const useFile = (fileConfig: FileUpload) => {
       }
       case SupportUploadFileTypes.video: {
         if (fileSize > videoSizeLimit) {
-          notify({
+          Toast.notify({
             type: 'error',
             message: t('common.fileUploader.uploadFromComputerLimit', {
               type: SupportUploadFileTypes.video,
@@ -110,7 +109,7 @@ export const useFile = (fileConfig: FileUpload) => {
       }
       case SupportUploadFileTypes.custom: {
         if (fileSize > docSizeLimit) {
-          notify({
+          Toast.notify({
             type: 'error',
             message: t('common.fileUploader.uploadFromComputerLimit', {
               type: SupportUploadFileTypes.document,
@@ -125,14 +124,13 @@ export const useFile = (fileConfig: FileUpload) => {
         return true
       }
     }
-  }, [audioSizeLimit, docSizeLimit, imgSizeLimit, notify, t, videoSizeLimit])
+  }, [audioSizeLimit, docSizeLimit, imgSizeLimit, t, videoSizeLimit])
 
   const handleAddFile = useCallback((newFile: FileEntity) => {
     const {
       files,
       setFiles,
     } = fileStore.getState()
-
     const newFiles = produce(files, (draft) => {
       draft.push(newFile)
     })
@@ -191,7 +189,7 @@ export const useFile = (fileConfig: FileUpload) => {
         },
       }, !!params.token)
     }
-  }, [fileStore, notify, t, handleUpdateFile, params])
+  }, [fileStore, t, handleUpdateFile, params])
 
   const startProgressTimer = useCallback((fileId: string) => {
     const timer = setInterval(() => {
@@ -243,7 +241,7 @@ export const useFile = (fileConfig: FileUpload) => {
       Toast.notify({ type: 'error', message: t('common.fileUploader.pasteFileLinkInvalid') })
       handleRemoveFile(uploadingFile.id)
     })
-  }, [checkSizeLimit, handleAddFile, handleUpdateFile, notify, t, handleRemoveFile, fileConfig?.allowed_file_types, fileConfig.allowed_file_extensions, startProgressTimer, params.token])
+  }, [checkSizeLimit, handleAddFile, handleUpdateFile, t, handleRemoveFile, fileConfig?.allowed_file_types, fileConfig.allowed_file_extensions, startProgressTimer, params.token])
 
   const handleLoadFileFromLinkSuccess = useCallback(noop, [])
 
@@ -283,6 +281,7 @@ export const useFile = (fileConfig: FileUpload) => {
           originalFile: file,
           base64Url: isImage ? reader.result as string : '',
         }
+        console.log(uploadingFile.originalFile)
         handleAddFile(uploadingFile)
         fileUpload({
           file: uploadingFile.originalFile,
@@ -308,7 +307,7 @@ export const useFile = (fileConfig: FileUpload) => {
       false,
     )
     reader.readAsDataURL(file)
-  }, [checkSizeLimit, notify, t, handleAddFile, handleUpdateFile, params.token, fileConfig?.allowed_file_types, fileConfig?.allowed_file_extensions])
+  }, [checkSizeLimit, t, handleAddFile, handleUpdateFile, params.token, fileConfig?.allowed_file_types, fileConfig?.allowed_file_extensions])
 
   const handleClipboardPasteFile = useCallback((e: ClipboardEvent<HTMLTextAreaElement>) => {
     const file = e.clipboardData?.files[0]

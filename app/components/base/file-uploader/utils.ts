@@ -20,6 +20,7 @@ export const fileUpload: FileUpload = ({
   onSuccessCallback,
   onErrorCallback,
 }, isPublic, url) => {
+  console.log(url)
   const formData = new FormData()
   formData.append('file', file)
   const onProgress = (e: ProgressEvent) => {
@@ -33,7 +34,7 @@ export const fileUpload: FileUpload = ({
     xhr: new XMLHttpRequest(),
     data: formData,
     onprogress: onProgress,
-  }, isPublic, url)
+  })
     .then((res: { id: string }) => {
       onSuccessCallback(res)
     })

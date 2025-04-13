@@ -18,7 +18,7 @@ import {
 import { useModalContext } from '@/context/modal-context'
 import type { ExternalDataTool } from '@/models/common'
 import AppIcon from '@/app/components/base/app-icon'
-import { useToastContext } from '@/app/components/base/toast'
+import Toast, { useToastContext } from '@/app/components/base/toast'
 
 const Tools = () => {
   const { t } = useTranslation()
