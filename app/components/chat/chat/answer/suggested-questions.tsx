@@ -23,20 +23,26 @@ const SuggestedQuestions: FC<SuggestedQuestionsProps> = ({
 
   if (!isOpeningStatement || !suggestedQuestions?.length)
     return null
-
+  const onRes = (e: any) => {
+    console.log(`${e}akkkk`)
+  }
   return (
     <div className='flex flex-wrap'>
       {suggestedQuestions.filter(q => !!q && q.trim()).map((question, index) => (
+        // check!!!suggest btn
         <Button
           key={index}
           variant='secondary-accent'
           className={klassName}
-          onClick={() => onSend?.(question)}
+          onClick={async () => {
+            onSend?.(question, [], false, null, onRes)
+            console.log('hell pls')
+          }}
         >
           {question}
         </Button>),
       )}
-    </div>
+    </div >
   )
 }
 

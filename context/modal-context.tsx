@@ -4,6 +4,7 @@ import type { Dispatch, SetStateAction } from 'react'
 import { useCallback, useState } from 'react'
 import { createContext, useContext, useContextSelector } from 'use-context-selector'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { noop } from 'lodash-es'
 import AccountSetting from '@/app/components/header/account-setting'
 import ApiBasedExtensionModal from '@/app/components/header/account-setting/api-based-extension-page/modal'
 import ModerationSettingModal from '@/app/components/base/features/new-feature-panel/moderation/moderation-setting-modal'
@@ -36,7 +37,6 @@ import type { InputVar } from '@/app/components/workflow/types'
 import type { UpdatePluginPayload } from '@/app/components/plugins/types'
 import UpdatePlugin from '@/app/components/plugins/update-plugin'
 import { removeSpecificQueryParam } from '@/utils'
-import { noop } from 'lodash-es'
 
 export type ModalState<T> = {
   payload: T
@@ -96,14 +96,14 @@ export const useModalContext = () => useContext(ModalContext)
 
 // Adding a dangling comma to avoid the generic parsing issue in tsx, see:
 // https://github.com/microsoft/TypeScript/issues/15713
-export const useModalContextSelector = <T,>(selector: (state: ModalContextState) => T): T =>
+export const useModalContextSelector = <T>(selector: (state: ModalContextState) => T): T =>
   useContextSelector(ModalContext, selector)
 
-type ModalContextProviderProps = {
-  children: React.ReactNode
+  type ModalContextProviderProps = {
+    children: React.ReactNode
 }
-export const ModalContextProvider = ({
-  children,
+  export const ModalContextProvider = ({
+    children,
 }: ModalContextProviderProps) => {
   const [showAccountSettingModal, setShowAccountSettingModal] = useState<ModalState<string> | null>(null)
   const [showApiBasedExtensionModal, setShowApiBasedExtensionModal] = useState<ModalState<ApiBasedExtension> | null>(null)
@@ -127,55 +127,55 @@ export const ModalContextProvider = ({
   const handleCancelAccountSettingModal = () => {
     const educationVerifying = localStorage.getItem(EDUCATION_VERIFYING_LOCALSTORAGE_ITEM)
 
-    if (educationVerifying === 'yes')
-      localStorage.removeItem(EDUCATION_VERIFYING_LOCALSTORAGE_ITEM)
+  if (educationVerifying === 'yes')
+  localStorage.removeItem(EDUCATION_VERIFYING_LOCALSTORAGE_ITEM)
 
-    removeSpecificQueryParam('action')
-    setShowAccountSettingModal(null)
-    if (showAccountSettingModal?.onCancelCallback)
-      showAccountSettingModal?.onCancelCallback()
+  removeSpecificQueryParam('action')
+  setShowAccountSettingModal(null)
+  if (showAccountSettingModal?.onCancelCallback)
+  showAccountSettingModal?.onCancelCallback()
   }
 
   const handleCancelModerationSettingModal = () => {
     setShowModerationSettingModal(null)
     if (showModerationSettingModal?.onCancelCallback)
-      showModerationSettingModal.onCancelCallback()
+  showModerationSettingModal.onCancelCallback()
   }
 
   const handleCancelExternalDataToolModal = () => {
     setShowExternalDataToolModal(null)
     if (showExternalDataToolModal?.onCancelCallback)
-      showExternalDataToolModal.onCancelCallback()
+  showExternalDataToolModal.onCancelCallback()
   }
 
   const handleCancelModelModal = useCallback(() => {
     setShowModelModal(null)
     if (showModelModal?.onCancelCallback)
-      showModelModal.onCancelCallback()
+  showModelModal.onCancelCallback()
   }, [showModelModal])
 
   const handleSaveModelModal = useCallback(() => {
     if (showModelModal?.onSaveCallback)
-      showModelModal.onSaveCallback(showModelModal.payload)
-    setShowModelModal(null)
+  showModelModal.onSaveCallback(showModelModal.payload)
+  setShowModelModal(null)
   }, [showModelModal])
 
   const handleCancelExternalApiModal = useCallback(() => {
     setShowExternalKnowledgeAPIModal(null)
     if (showExternalKnowledgeAPIModal?.onCancelCallback)
-      showExternalKnowledgeAPIModal.onCancelCallback()
+  showExternalKnowledgeAPIModal.onCancelCallback()
   }, [showExternalKnowledgeAPIModal])
 
   const handleSaveExternalApiModal = useCallback(async (updatedFormValue: CreateExternalAPIReq) => {
     if (showExternalKnowledgeAPIModal?.onSaveCallback)
-      showExternalKnowledgeAPIModal.onSaveCallback(updatedFormValue)
-    setShowExternalKnowledgeAPIModal(null)
+  showExternalKnowledgeAPIModal.onSaveCallback(updatedFormValue)
+  setShowExternalKnowledgeAPIModal(null)
   }, [showExternalKnowledgeAPIModal])
 
   const handleEditExternalApiModal = useCallback(async (updatedFormValue: CreateExternalAPIReq) => {
     if (showExternalKnowledgeAPIModal?.onEditCallback)
-      showExternalKnowledgeAPIModal.onEditCallback(updatedFormValue)
-    setShowExternalKnowledgeAPIModal(null)
+  showExternalKnowledgeAPIModal.onEditCallback(updatedFormValue)
+  setShowExternalKnowledgeAPIModal(null)
   }, [showExternalKnowledgeAPIModal])
 
   const handleCancelModelLoadBalancingEntryModal = useCallback(() => {
@@ -186,7 +186,7 @@ export const ModalContextProvider = ({
   const handleCancelOpeningModal = useCallback(() => {
     setShowOpeningModal(null)
     if (showOpeningModal?.onCancelCallback)
-      showOpeningModal.onCancelCallback()
+  showOpeningModal.onCancelCallback()
   }, [showOpeningModal])
 
   const handleSaveModelLoadBalancingEntryModal = useCallback((entry: ModelLoadBalancingConfigEntry) => {
@@ -204,177 +204,177 @@ export const ModalContextProvider = ({
 
   const handleSaveApiBasedExtension = (newApiBasedExtension: ApiBasedExtension) => {
     if (showApiBasedExtensionModal?.onSaveCallback)
-      showApiBasedExtensionModal.onSaveCallback(newApiBasedExtension)
-    setShowApiBasedExtensionModal(null)
+  showApiBasedExtensionModal.onSaveCallback(newApiBasedExtension)
+  setShowApiBasedExtensionModal(null)
   }
 
   const handleSaveModeration = (newModerationConfig: ModerationConfig) => {
     if (showModerationSettingModal?.onSaveCallback)
-      showModerationSettingModal.onSaveCallback(newModerationConfig)
-    setShowModerationSettingModal(null)
+  showModerationSettingModal.onSaveCallback(newModerationConfig)
+  setShowModerationSettingModal(null)
   }
 
   const handleSaveExternalDataTool = (newExternalDataTool: ExternalDataTool) => {
     if (showExternalDataToolModal?.onSaveCallback)
-      showExternalDataToolModal.onSaveCallback(newExternalDataTool)
-    setShowExternalDataToolModal(null)
+  showExternalDataToolModal.onSaveCallback(newExternalDataTool)
+  setShowExternalDataToolModal(null)
   }
 
   const handleValidateBeforeSaveExternalDataTool = (newExternalDataTool: ExternalDataTool) => {
     if (showExternalDataToolModal?.onValidateBeforeSaveCallback)
-      return showExternalDataToolModal?.onValidateBeforeSaveCallback(newExternalDataTool)
-    return true
+  return showExternalDataToolModal?.onValidateBeforeSaveCallback(newExternalDataTool)
+  return true
   }
 
   const handleSaveOpeningModal = (newOpening: OpeningStatement) => {
     if (showOpeningModal?.onSaveCallback)
-      showOpeningModal.onSaveCallback(newOpening)
-    setShowOpeningModal(null)
+  showOpeningModal.onSaveCallback(newOpening)
+  setShowOpeningModal(null)
   }
 
   return (
-    <ModalContext.Provider value={{
-      setShowAccountSettingModal,
-      setShowApiBasedExtensionModal,
-      setShowModerationSettingModal,
-      setShowExternalDataToolModal,
-      setShowPricingModal: () => setShowPricingModal(true),
-      setShowAnnotationFullModal: () => setShowAnnotationFullModal(true),
-      setShowModelModal,
-      setShowExternalKnowledgeAPIModal,
-      setShowModelLoadBalancingModal,
-      setShowModelLoadBalancingEntryModal,
-      setShowOpeningModal,
-      setShowUpdatePluginModal,
-    }}>
-      <>
-        {children}
-        {
-          !!showAccountSettingModal && (
-            <AccountSetting
-              activeTab={showAccountSettingModal.payload}
-              onCancel={handleCancelAccountSettingModal}
-            />
-          )
-        }
-
-        {
-          !!showApiBasedExtensionModal && (
-            <ApiBasedExtensionModal
-              data={showApiBasedExtensionModal.payload}
-              onCancel={() => setShowApiBasedExtensionModal(null)}
-              onSave={handleSaveApiBasedExtension}
-            />
-          )
-        }
-        {
-          !!showModerationSettingModal && (
-            <ModerationSettingModal
-              data={showModerationSettingModal.payload}
-              onCancel={handleCancelModerationSettingModal}
-              onSave={handleSaveModeration}
-            />
-          )
-        }
-        {
-          !!showExternalDataToolModal && (
-            <ExternalDataToolModal
-              data={showExternalDataToolModal.payload}
-              onCancel={handleCancelExternalDataToolModal}
-              onSave={handleSaveExternalDataTool}
-              onValidateBeforeSave={handleValidateBeforeSaveExternalDataTool}
-            />
-          )
-        }
-
-        {
-          !!showPricingModal && (
-            <Pricing onCancel={() => {
-              if (searchParams.get('show-pricing') === '1')
-                router.push(location.pathname, { forceOptimisticNavigation: true } as any)
-
-              setShowPricingModal(false)
-            }} />
-          )
-        }
-
-        {
-          showAnnotationFullModal && (
-            <AnnotationFullModal
-              show={showAnnotationFullModal}
-              onHide={() => setShowAnnotationFullModal(false)} />
-          )
-        }
-        {
-          !!showModelModal && (
-            <ModelModal
-              provider={showModelModal.payload.currentProvider}
-              configurateMethod={showModelModal.payload.currentConfigurationMethod}
-              currentCustomConfigurationModelFixedFields={showModelModal.payload.currentCustomConfigurationModelFixedFields}
-              onCancel={handleCancelModelModal}
-              onSave={handleSaveModelModal}
-            />
-          )
-        }
-        {
-          !!showExternalKnowledgeAPIModal && (
-            <ExternalAPIModal
-              data={showExternalKnowledgeAPIModal.payload}
-              datasetBindings={showExternalKnowledgeAPIModal.datasetBindings ?? []}
-              onSave={handleSaveExternalApiModal}
-              onCancel={handleCancelExternalApiModal}
-              onEdit={handleEditExternalApiModal}
-              isEditMode={showExternalKnowledgeAPIModal.isEditMode ?? false}
-            />
-          )
-        }
-        {
-          Boolean(showModelLoadBalancingModal) && (
-            <ModelLoadBalancingModal {...showModelLoadBalancingModal!} />
-          )
-        }
-        {
-          !!showModelLoadBalancingEntryModal && (
-            <ModelLoadBalancingEntryModal
-              provider={showModelLoadBalancingEntryModal.payload.currentProvider}
-              configurationMethod={showModelLoadBalancingEntryModal.payload.currentConfigurationMethod}
-              currentCustomConfigurationModelFixedFields={showModelLoadBalancingEntryModal.payload.currentCustomConfigurationModelFixedFields}
-              entry={showModelLoadBalancingEntryModal.payload.entry}
-              onCancel={handleCancelModelLoadBalancingEntryModal}
-              onSave={handleSaveModelLoadBalancingEntryModal}
-              onRemove={handleRemoveModelLoadBalancingEntry}
-            />
-          )
-        }
-        {showOpeningModal && (
-          <OpeningSettingModal
-            data={showOpeningModal.payload}
-            onSave={handleSaveOpeningModal}
-            onCancel={handleCancelOpeningModal}
-            promptVariables={showOpeningModal.payload.promptVariables}
-            workflowVariables={showOpeningModal.payload.workflowVariables}
-            onAutoAddPromptVariable={showOpeningModal.payload.onAutoAddPromptVariable}
+  <ModalContext.Provider value={{
+    setShowAccountSettingModal,
+    setShowApiBasedExtensionModal,
+    setShowModerationSettingModal,
+    setShowExternalDataToolModal,
+    setShowPricingModal: () => setShowPricingModal(true),
+    setShowAnnotationFullModal: () => setShowAnnotationFullModal(true),
+    setShowModelModal,
+    setShowExternalKnowledgeAPIModal,
+    setShowModelLoadBalancingModal,
+    setShowModelLoadBalancingEntryModal,
+    setShowOpeningModal,
+    setShowUpdatePluginModal,
+  }}>
+    <>
+      {children}
+      {
+        !!showAccountSettingModal && (
+          <AccountSetting
+            activeTab={showAccountSettingModal.payload}
+            onCancel={handleCancelAccountSettingModal}
           />
-        )}
+        )
+      }
 
-        {
-          !!showUpdatePluginModal && (
-            <UpdatePlugin
-              {...showUpdatePluginModal.payload}
-              onCancel={() => {
-                setShowUpdatePluginModal(null)
-                showUpdatePluginModal.onCancelCallback?.()
-              }}
-              onSave={() => {
-                setShowUpdatePluginModal(null)
-                showUpdatePluginModal.onSaveCallback?.({} as any)
-              }}
-            />
-          )
-        }
-      </>
-    </ModalContext.Provider>
+      {
+        !!showApiBasedExtensionModal && (
+          <ApiBasedExtensionModal
+            data={showApiBasedExtensionModal.payload}
+            onCancel={() => setShowApiBasedExtensionModal(null)}
+            onSave={handleSaveApiBasedExtension}
+          />
+        )
+      }
+      {
+        !!showModerationSettingModal && (
+          <ModerationSettingModal
+            data={showModerationSettingModal.payload}
+            onCancel={handleCancelModerationSettingModal}
+            onSave={handleSaveModeration}
+          />
+        )
+      }
+      {
+        !!showExternalDataToolModal && (
+          <ExternalDataToolModal
+            data={showExternalDataToolModal.payload}
+            onCancel={handleCancelExternalDataToolModal}
+            onSave={handleSaveExternalDataTool}
+            onValidateBeforeSave={handleValidateBeforeSaveExternalDataTool}
+          />
+        )
+      }
+
+      {
+        !!showPricingModal && (
+          <Pricing onCancel={() => {
+            if (searchParams.get('show-pricing') === '1')
+              router.push(location.pathname, { forceOptimisticNavigation: true } as any)
+
+            setShowPricingModal(false)
+          }} />
+        )
+      }
+
+      {
+        showAnnotationFullModal && (
+          <AnnotationFullModal
+            show={showAnnotationFullModal}
+            onHide={() => setShowAnnotationFullModal(false)} />
+        )
+      }
+      {
+        !!showModelModal && (
+          <ModelModal
+            provider={showModelModal.payload.currentProvider}
+            configurateMethod={showModelModal.payload.currentConfigurationMethod}
+            currentCustomConfigurationModelFixedFields={showModelModal.payload.currentCustomConfigurationModelFixedFields}
+            onCancel={handleCancelModelModal}
+            onSave={handleSaveModelModal}
+          />
+        )
+      }
+      {
+        !!showExternalKnowledgeAPIModal && (
+          <ExternalAPIModal
+            data={showExternalKnowledgeAPIModal.payload}
+            datasetBindings={showExternalKnowledgeAPIModal.datasetBindings ?? []}
+            onSave={handleSaveExternalApiModal}
+            onCancel={handleCancelExternalApiModal}
+            onEdit={handleEditExternalApiModal}
+            isEditMode={showExternalKnowledgeAPIModal.isEditMode ?? false}
+          />
+        )
+      }
+      {
+        Boolean(showModelLoadBalancingModal) && (
+          <ModelLoadBalancingModal {...showModelLoadBalancingModal!} />
+        )
+      }
+      {
+        !!showModelLoadBalancingEntryModal && (
+          <ModelLoadBalancingEntryModal
+            provider={showModelLoadBalancingEntryModal.payload.currentProvider}
+            configurationMethod={showModelLoadBalancingEntryModal.payload.currentConfigurationMethod}
+            currentCustomConfigurationModelFixedFields={showModelLoadBalancingEntryModal.payload.currentCustomConfigurationModelFixedFields}
+            entry={showModelLoadBalancingEntryModal.payload.entry}
+            onCancel={handleCancelModelLoadBalancingEntryModal}
+            onSave={handleSaveModelLoadBalancingEntryModal}
+            onRemove={handleRemoveModelLoadBalancingEntry}
+          />
+        )
+      }
+      {showOpeningModal && (
+        <OpeningSettingModal
+          data={showOpeningModal.payload}
+          onSave={handleSaveOpeningModal}
+          onCancel={handleCancelOpeningModal}
+          promptVariables={showOpeningModal.payload.promptVariables}
+          workflowVariables={showOpeningModal.payload.workflowVariables}
+          onAutoAddPromptVariable={showOpeningModal.payload.onAutoAddPromptVariable}
+        />
+      )}
+
+      {
+        !!showUpdatePluginModal && (
+          <UpdatePlugin
+            {...showUpdatePluginModal.payload}
+            onCancel={() => {
+              setShowUpdatePluginModal(null)
+              showUpdatePluginModal.onCancelCallback?.()
+            }}
+            onSave={() => {
+              setShowUpdatePluginModal(null)
+              showUpdatePluginModal.onSaveCallback?.({} as any)
+            }}
+          />
+        )
+      }
+    </>
+  </ModalContext.Provider>
   )
 }
 
-export default ModalContext
+  export default ModalContext

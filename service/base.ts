@@ -5,7 +5,7 @@ import { base, baseOptions } from './fetch'
 import { API_PREFIX } from '@/config'
 import Toast from '@/app/components/base/toast'
 // import type { AnnotationReply, MessageEnd, MessageReplace, ThoughtItem } from '@/app/components/chat/chat/type'
-import type { AnnotationReply, MessageEnd, MessageReplace, ThoughtItem } from '@/app/components/chat/types'
+// import type { AnnotationReply, MessageEnd, MessageReplace, ThoughtItem } from '@/app/components/chat/types'
 import type { VisionFile } from '@/types/app'
 import type {
   AgentLogResponse,
@@ -24,7 +24,7 @@ import type {
   WorkflowFinishedResponse,
   WorkflowStartedResponse,
 } from '@/types/workflow'
-import { asyncRunSafe, removeAccessToken } from '@/utils'
+import { asyncRunSafe } from '@/utils'
 const TIME_OUT = 100000
 
 export type IOnDataMoreInfo = {
@@ -36,11 +36,11 @@ export type IOnDataMoreInfo = {
 }
 
 export type IOnData = (message: string, isFirstMessage: boolean, moreInfo: IOnDataMoreInfo) => void
-export type IOnThought = (though: ThoughtItem) => void
+export type IOnThought = (though: any) => void
 export type IOnFile = (file: VisionFile) => void
-export type IOnMessageEnd = (messageEnd: MessageEnd) => void
-export type IOnMessageReplace = (messageReplace: MessageReplace) => void
-export type IOnAnnotationReply = (messageReplace: AnnotationReply) => void
+export type IOnMessageEnd = (messageEnd: any) => void
+export type IOnMessageReplace = (messageReplace: any) => void
+export type IOnAnnotationReply = (messageReplace: any) => void
 export type IOnCompleted = (hasError?: boolean, errorMessage?: string) => void
 export type IOnError = (msg: string, code?: string) => void
 
@@ -199,16 +199,16 @@ const handleStream = (
               isFirstMessage = false
             }
             else if (bufferObj.event === 'agent_thought') {
-              onThought?.(bufferObj as ThoughtItem)
+              onThought?.(bufferObj as any)
             }
             else if (bufferObj.event === 'message_file') {
               onFile?.(bufferObj as VisionFile)
             }
             else if (bufferObj.event === 'message_end') {
-              onMessageEnd?.(bufferObj as MessageEnd)
+              onMessageEnd?.(bufferObj as any)
             }
             else if (bufferObj.event === 'message_replace') {
-              onMessageReplace?.(bufferObj as MessageReplace)
+              onMessageReplace?.(bufferObj as any)
             }
             else if (bufferObj.event === 'workflow_started') {
               onWorkflowStarted?.(bufferObj as WorkflowStartedResponse)
@@ -383,6 +383,7 @@ export const ssePost = (
 
   globalThis.fetch(urlWithPrefix, options)
     .then(async (res: any) => {
+      console.log(res)
       if (!/^(2|3)\d{2}$/.test(res.status)) {
         const contentLength = res.headers.get('content-length')
         if (!contentLength || contentLength === '0') {
@@ -463,11 +464,11 @@ export const request = async<T>(url: string, options = {}, otherOptions?: IOther
         isPublicAPI = false,
         silent,
       } = otherOptionsForBaseFetch
-      if (isPublicAPI && code === 'unauthorized') {
-        removeAccessToken()
-        globalThis.location.reload()
-        return Promise.reject(err)
-      }
+      // if (isPublicAPI && code === 'unauthorized') {
+      //   removeAccessToken()
+      //   globalThis.location.reload()
+      //   return Promise.reject(err)
+      // }
       if (code === 'init_validate_failed' && !silent) {
         Toast.notify({ type: 'error', message, duration: 4000 })
         return Promise.reject(err)

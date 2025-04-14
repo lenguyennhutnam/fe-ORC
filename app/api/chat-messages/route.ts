@@ -11,7 +11,6 @@ export async function POST(request: NextRequest) {
     response_mode: responseMode,
   } = body
   const { user } = getInfo(request)
-  console.log(body)
   const res = await client.createChatMessage(inputs, query, user, responseMode, conversationId, files)
   return new Response(res.data as any)
 }

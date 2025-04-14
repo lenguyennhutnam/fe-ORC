@@ -121,7 +121,7 @@ const ChatWrapper = () => {
     setIsResponding(respondingState)
   }, [respondingState, setIsResponding])
 
-  const doSend: OnSend = useCallback((message, files, isRegenerate = false, parentAnswer: ChatItem | null = null) => {
+  const doSend: OnSend = useCallback((message, files, isRegenerate = false, parentAnswer: ChatItem | null = null, onRes?: any) => {
     const data: any = {
       query: message,
       files,
@@ -129,7 +129,8 @@ const ChatWrapper = () => {
       conversation_id: currentConversationId || null,
       parent_message_id: (isRegenerate ? parentAnswer?.id : getLastAnswer(chatList)?.id) || null,
     }
-
+    // lay kq sau khi gui tn
+    // check!!!api gui tin nhan
     handleSend(
       getUrl('chat-messages'),
       data,
@@ -138,13 +139,14 @@ const ChatWrapper = () => {
         onConversationComplete: currentConversationId ? undefined : handleNewConversationCompleted,
         isPublicAPI: !isInstalledApp,
       },
+      onRes,
     )
   }, [
     chatList,
     handleNewConversationCompleted,
     handleSend,
     currentConversationId,
-    currentConversationItem,
+    // currentConversationItem,
     currentConversationInputs,
     newConversationInputs,
     isInstalledApp,

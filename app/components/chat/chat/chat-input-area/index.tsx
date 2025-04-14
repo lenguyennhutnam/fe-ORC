@@ -85,7 +85,6 @@ const ChatInputArea = ({
       Toast.notify({ type: 'info', message: t('appDebug.errorMessage.waitForResponse') })
       return
     }
-
     if (onSend) {
       const { files, setFiles } = filesStore.getState()
       if (files.find(item => item.transferMethod === TransferMethod.local_file && !item.uploadedId)) {
@@ -160,7 +159,10 @@ const ChatInputArea = ({
       fileConfig={visionConfig}
       speechToTextConfig={speechToTextConfig}
       onShowVoiceInput={handleShowVoiceInput}
-      onSend={handleSend}
+      onSend={() => {
+        console.log(999)
+        handleSend()
+      }}
       theme={theme}
     />
   )

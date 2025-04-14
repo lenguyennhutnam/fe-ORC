@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next'
 import { produce, setAutoFreeze } from 'immer'
 import { uniqBy } from 'lodash-es'
 import { useParams, usePathname } from 'next/navigation'
-import { v4 as uuidV4 } from 'uuid'
 import type {
   ChatConfig,
   ChatItem,
@@ -17,18 +16,17 @@ import type {
   Inputs,
 } from '../types'
 import { getThreadMessages } from '../utils'
+import Toast from '../../base/toast'
 import type { InputForm } from './type'
 import {
   getProcessedInputs,
   processOpeningStatement,
 } from './utils'
 import { TransferMethod } from '@/types/app'
-import { useToastContext } from '@/app/components/base/toast'
 import { ssePost } from '@/service/base'
 import type { Annotation } from '@/models/log'
 import { WorkflowRunningStatus } from '@/app/components/workflow/types'
 import useTimestamp from '@/hooks/use-timestamp'
-import { AudioPlayerManager } from '@/app/components/base/audio-btn/audio.player.manager'
 import type { FileEntity } from '@/app/components/base/file-uploader/types'
 import {
   getProcessedFiles,
@@ -56,7 +54,6 @@ export const useChat = (
 ) => {
   const { t } = useTranslation()
   const { formatTime } = useTimestamp()
-  const { notify } = useToastContext()
   const conversationId = useRef('')
   const hasStopResponded = useRef(false)
   const [isResponding, setIsResponding] = useState(false)
@@ -222,11 +219,14 @@ export const useChat = (
       onConversationComplete,
       isPublicAPI,
     }: SendCallback,
+    onRes: any,
   ) => {
+    onRes(url)
+    // check!!!Lam Tiep
     setSuggestQuestions([])
 
     if (isRespondingRef.current) {
-      notify({ type: 'info', message: t('appDebug.errorMessage.waitForResponse') })
+      Toast.notify({ type: 'info', message: t('appDebug.errorMessage.waitForResponse') })
       return false
     }
 
@@ -268,19 +268,19 @@ export const useChat = (
       parentMessageId: questionItem.id,
       siblingIndex: parentMessage?.children?.length ?? chatTree.length,
     }
-
     handleResponding(true)
     hasStopResponded.current = false
 
     const { query, files, inputs, ...restData } = data
     const bodyParams = {
-      response_mode: 'streaming',
+      response_mode: 'blocking',
       conversation_id: conversationId.current,
       files: getProcessedFiles(files || []),
       query,
       inputs: getProcessedInputs(inputs || {}, formSettings?.inputsForm || []),
       ...restData,
     }
+
     if (bodyParams?.files?.length) {
       bodyParams.files = bodyParams.files.map((item) => {
         if (item.transfer_method === TransferMethod.local_file) {
@@ -296,20 +296,22 @@ export const useChat = (
     let isAgentMode = false
     let hasSetResponseId = false
 
-    let ttsUrl = ''
-    let ttsIsPublic = false
-    if (params.token) {
-      ttsUrl = '/text-to-audio'
-      ttsIsPublic = true
-    }
-    else if (params.appId) {
-      if (pathname.search('explore/installed') > -1)
-        ttsUrl = `/installed-apps/${params.appId}/text-to-audio`
-      else
-        ttsUrl = `/apps/${params.appId}/text-to-audio`
-    }
-    const player = AudioPlayerManager.getInstance().getAudioPlayer(ttsUrl, ttsIsPublic, uuidV4(), 'none', 'none', (_: any): any => { })
+    // let ttsUrl = ''
+    // let ttsIsPublic = false
+    // if (params.token) {
+    //   ttsUrl = '/text-to-audio'
+    //   ttsIsPublic = true
+    // }
+    // else if (params.appId) {
+    //   if (pathname.search('explore/installed') > -1)
+    //     ttsUrl = `/installed-apps/${params.appId}/text-to-audio`
+    //   else
+    //     ttsUrl = `/apps/${params.appId}/text-to-audio`
+    // }
+    // const player = AudioPlayerManager.getInstance().getAudioPlayer(ttsUrl, ttsIsPublic, uuidV4(), 'none', 'none', (_: any): any => { })
     console.log(url)
+    // check!!!send msg
+    console.log(responseItem)
     ssePost(
       url,
       {
@@ -577,15 +579,15 @@ export const useChat = (
             parentId: data.parent_message_id,
           })
         },
-        onTTSChunk: (messageId: string, audio: string) => {
-          if (!audio || audio === '')
-            return
-          player.playAudioWithAudio(audio, true)
-          AudioPlayerManager.getInstance().resetMsgId(messageId)
-        },
-        onTTSEnd: (messageId: string, audio: string) => {
-          player.playAudioWithAudio(audio, false)
-        },
+        // onTTSChunk: (messageId: string, audio: string) => {
+        //   if (!audio || audio === '')
+        //     return
+        //   player.playAudioWithAudio(audio, true)
+        //   AudioPlayerManager.getInstance().resetMsgId(messageId)
+        // },
+        // onTTSEnd: (messageId: string, audio: string) => {
+        //   player.playAudioWithAudio(audio, false)
+        // },
         onLoopStart: ({ data: loopStartedData }) => {
           responseItem.workflowProcess!.tracing!.push({
             ...loopStartedData,
@@ -616,7 +618,8 @@ export const useChat = (
           })
         },
       })
-    return true
+    console.log(responseItem)
+    return responseItem
   }, [
     t,
     chatTree.length,
@@ -624,12 +627,11 @@ export const useChat = (
     config?.suggested_questions_after_answer,
     updateCurrentQAOnTree,
     updateChatTreeNode,
-    notify,
     handleResponding,
     formatTime,
-    params.token,
-    params.appId,
-    pathname,
+    // params.token,
+    // params.appId,
+    // pathname,
     formSettings,
   ])
 

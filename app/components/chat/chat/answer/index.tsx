@@ -8,14 +8,14 @@ import type {
   ChatConfig,
   ChatItem,
 } from '../../types'
+import Citation from '../citation'
 import Operation from './operation'
 import AgentContent from './agent-content'
 import BasicContent from './basic-content'
-import SuggestedQuestions from './suggested-questions'
 import More from './more'
 import WorkflowProcessItem from './workflow-process'
+import SuggestedQuestions from './suggested-questions'
 import LoadingAnim from '@/app/components/chat/chat/loading-anim'
-import Citation from '@/app/components/chat/chat/citation'
 // import { EditTitle } from '@/app/components/app/annotation/edit-annotation-modal/edit-item'
 import type { AppData } from '@/models/share'
 import AnswerIcon from '@/app/components/base/answer-icon'

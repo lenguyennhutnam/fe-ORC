@@ -109,7 +109,7 @@ const ChatItem: FC<ChatItemProps> = ({
       data.files = files
 
     handleSend(
-      `apps/${appId}/chat-messages`,
+      `app/${appId}/chat-messages`,
       data,
       {
         onGetConversationMessages: (conversationId, getAbortController) => fetchConversationMessages(appId, conversationId, getAbortController),

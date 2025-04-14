@@ -20,13 +20,13 @@ import { buildChatItemTree } from '../utils'
 import { addFileInfos, sortAgentSorts } from '@/utils/tools'
 import { getProcessedFilesFromResponse } from '@/app/components/base/file-uploader/utils'
 import {
-  delConversation,
   fetchAppInfo,
   pinConversation,
   renameConversation,
   unpinConversation,
 } from '@/service/share'
 import {
+  deleteConversation,
   fetchAppMeta, fetchAppParams,
   fetchChatList,
   fetchConversations,
@@ -221,7 +221,7 @@ export const useChatWithHistory = (installedAppInfo?: InstalledApp) => {
     handleNewConversationInputsChange(conversationInputs)
   }, [handleNewConversationInputsChange, inputsForms])
 
-  const { data: newConversation } = useSWR(newConversationId ? [isInstalledApp, appId, newConversationId] : null, () => generationConversationName(isInstalledApp, appId, newConversationId), { revalidateOnFocus: false })
+  const { data: newConversation } = useSWR(newConversationId ? [appId, newConversationId] : null, () => generationConversationName(newConversationId), { revalidateOnFocus: false })
   const [originConversationList, setOriginConversationList] = useState<ConversationItem[]>([])
   useEffect(() => {
     if (appConversationData?.data && !appConversationDataLoading)
@@ -278,9 +278,9 @@ export const useChatWithHistory = (installedAppInfo?: InstalledApp) => {
   const checkInputsRequired = useCallback((silent?: boolean) => {
     let hasEmptyInput = ''
     let fileIsUploading = false
-    const requiredVars = inputsForms.filter(({ required }) => required)
+    const requiredVars = inputsForms.filter(({ required }: { required: any }) => required)
     if (requiredVars.length) {
-      requiredVars.forEach(({ variable, label, type }) => {
+      requiredVars.forEach(({ variable, label, type }: { variable: any; label: any; type: any }) => {
         if (hasEmptyInput)
           return
 
@@ -362,7 +362,7 @@ export const useChatWithHistory = (installedAppInfo?: InstalledApp) => {
 
     try {
       setConversationDeleting(true)
-      await delConversation(isInstalledApp, appId, conversationId)
+      await deleteConversation(conversationId)
       notify({ type: 'success', message: t('common.api.success') })
       onSuccess()
     }

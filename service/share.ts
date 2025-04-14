@@ -2,22 +2,17 @@ import type {
   IOnCompleted,
   IOnData,
   IOnError,
-  IOnFile,
   IOnIterationFinished,
   IOnIterationNext,
   IOnIterationStarted,
   IOnLoopFinished,
   IOnLoopNext,
   IOnLoopStarted,
-  IOnMessageEnd,
   IOnMessageReplace,
   IOnNodeFinished,
   IOnNodeStarted,
-  IOnTTSChunk,
-  IOnTTSEnd,
   IOnTextChunk,
   IOnTextReplace,
-  IOnThought,
   IOnWorkflowFinished,
   IOnWorkflowStarted,
 } from './base'
@@ -46,26 +41,26 @@ export function getUrl(url: string) {
   // return isInstalledApp ? `abc/${installedAppId}/${url.startsWith('/') ? url.slice(1) : url}` : url
 }
 
-export const sendChatMessage = async (body: Record<string, any>, { onData, onCompleted, onThought, onFile, onError, getAbortController, onMessageEnd, onMessageReplace, onTTSChunk, onTTSEnd }: {
-  onData: IOnData
-  onCompleted: IOnCompleted
-  onFile: IOnFile
-  onThought: IOnThought
-  onError: IOnError
-  onMessageEnd?: IOnMessageEnd
-  onMessageReplace?: IOnMessageReplace
-  getAbortController?: (abortController: AbortController) => void
-  onTTSChunk?: IOnTTSChunk
-  onTTSEnd?: IOnTTSEnd
-}, isInstalledApp: boolean, installedAppId = '') => {
-  console.log('abc')
-  // return ssePost(getUrl('chat-messages'), {
-  //   body: {
-  //     ...body,
-  //     response_mode: 'streaming',
-  //   },
-  // }, { onData, onCompleted, onThought, onFile, isPublicAPI: !isInstalledApp, onError, getAbortController, onMessageEnd, onMessageReplace, onTTSChunk, onTTSEnd })
-}
+// export const sendChatMessage = async (body: Record<string, any>, { onData, onCompleted, onThought, onFile, onError, getAbortController, onMessageEnd, onMessageReplace, onTTSChunk, onTTSEnd }: {
+//   onData: IOnData
+//   onCompleted: IOnCompleted
+//   onFile: IOnFile
+//   onThought: IOnThought
+//   onError: IOnError
+//   onMessageEnd?: IOnMessageEnd
+//   onMessageReplace?: IOnMessageReplace
+//   getAbortController?: (abortController: AbortController) => void
+//   onTTSChunk?: IOnTTSChunk
+//   onTTSEnd?: IOnTTSEnd
+// }, isInstalledApp: boolean, installedAppId = '') => {
+//   console.log('abc')
+//   return ssePost(getUrl('chat-messages'), {
+//     body: {
+//       ...body,
+//       response_mode: 'streaming',
+//     },
+//   }, { onData, onCompleted, onThought, onFile, isPublicAPI: !isInstalledApp, onError, getAbortController, onMessageEnd, onMessageReplace, onTTSChunk, onTTSEnd })
+// }
 
 export const stopChatMessageResponding = async (appId: string, taskId: string, isInstalledApp: boolean, installedAppId = '') => {
   return getAction('post', isInstalledApp)(getUrl(`chat-messages/${taskId}/stop`))
@@ -148,22 +143,27 @@ export const fetchAppInfo = async () => {
 // }
 
 export const pinConversation = async (isInstalledApp: boolean, installedAppId = '', id: string) => {
+  console.log(231)
   return getAction('patch', isInstalledApp)(getUrl(`conversations/${id}/pin`))
 }
 
 export const unpinConversation = async (isInstalledApp: boolean, installedAppId = '', id: string) => {
+  console.log(231)
   return getAction('patch', isInstalledApp)(getUrl(`conversations/${id}/unpin`))
 }
 
 export const delConversation = async (isInstalledApp: boolean, installedAppId = '', id: string) => {
+  console.log(231)
   return getAction('del', isInstalledApp)(getUrl(`conversations/${id}`))
 }
 
 export const renameConversation = async (isInstalledApp: boolean, installedAppId = '', id: string, name: string) => {
+  console.log(231)
   return getAction('post', isInstalledApp)(getUrl(`conversations/${id}/name`), { body: { name } })
 }
 
 export const generationConversationName = async (isInstalledApp: boolean, installedAppId = '', id: string) => {
+  console.log(231)
   return getAction('post', isInstalledApp)(getUrl(`conversations/${id}/name`), { body: { auto_generate: true } }) as Promise<any>
 }
 
